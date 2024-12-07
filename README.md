@@ -1,6 +1,6 @@
 # Nhom3_DeTai_4
-Staff Manager Admin : 
-Phần mềm quản lý bán hàng trang sức cho công ty kinh doanh trang sức tại 01 cửa hàng có nhiều quầy hàng ( Đọc thêm nội dung đề tài trên trang courses Chủ Đề 4)
+Chủ Đề 4: 
+Staff Manager Admin :
 Phần mềm quản lý bán hàng trang sức cho công ty kinh doanh trang sức tại 01 cửa hàng có nhiều quầy hàng
  - Quản lý tạo lập đơn hàng bán tại quầy của khách và in hoá đơn bán hàng. Các mặt hàng được nhập bằng quét barcode hoặc nhập trực tiếp mã hàng vào chương trình. Chương trình hỗ trợ in phiếu bảo hành với các mặt hàng trang sức.
                << Giá bán = giá vốn sản phẩm * tỉ lệ áp giá, Giá vốn sản phẩm = [giá vàng thời điểm * trọng lượng sản phẩm] + tiền công + tiền đá >>

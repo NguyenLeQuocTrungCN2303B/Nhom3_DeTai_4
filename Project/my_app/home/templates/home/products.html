@@ -1,0 +1,22 @@
+{% extends "master-page.html"%}
+
+{%block nav-bar%}
+    {% include '../includes/nav-bar.html'%}
+{%endblock%}
+
+{%block left-menu%}
+    {% include '../includes/left-menu.html'%}
+{%endblock%}
+
+{%block content %}
+    <h1>Product List</h1>
+    <ul>
+        {% for product in products %}
+            <li>{{ product.name }} - {{ product.kind }} - {{ product.weight }}</li>
+        {% endfor %}
+    </ul>
+{%endblock%}
+
+{%block footer%}
+    {% include '../includes/footer.html'%}
+{%endblock%}

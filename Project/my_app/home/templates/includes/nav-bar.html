@@ -9,90 +9,29 @@ id="layout-navbar">
 </div>
 
 <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
-  <!-- Search -->
-  <div class="navbar-nav align-items-center">
-    <div class="nav-item d-flex align-items-center">
-      <i class="bx bx-search bx-md"></i>
-      <input
-        type="text"
-        class="form-control border-0 shadow-none ps-1 ps-sm-2"
-        placeholder="Search..."
-        aria-label="Search..." />
-    </div>
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      <li class="nav-item" style="display: flex; align-items: center;">
+        <a class="nav-link" aria-current="page" href="" style="display: flex; align-items: center; gap:5px;">
+          <img src="//theme.hstatic.net/200000061680/1000549213/14/icon_header_left_list_2.png?v=1351" ></img>
+          <div>Home</div>
+        </a>
+      </li>
+      <li class="nav-item" >
+        <a class="nav-link" href="http://127.0.0.1:8000/gold-price"  style="display: flex; align-items: center; gap:5px;" >
+          <img src="https://theme.hstatic.net/200000061680/1000549213/14/icon_header_left_list_3.png?v=1351"></img>
+          <dev>Giá Vàng</dev>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="javascript:void(0)" tabindex="-1" style="color: #696cff;">Khuyến mãi</a>
+      </li>
+    </ul>
+    <form class="d-flex" onsubmit="return false">
+      <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+      <button class="btn btn-outline-primary" type="submit">Search</button>
+    </form>  
   </div>
-  <!-- /Search -->
-
-  <ul class="navbar-nav flex-row align-items-center ms-auto">
-    <!-- Place this tag where you want the button to render. -->
-    <li class="nav-item lh-1 me-4">
-      <a
-        class="github-button"
-        href="https://github.com/themeselection/sneat-html-admin-template-free"
-        data-icon="octicon-star"
-        data-size="large"
-        data-show-count="true"
-        aria-label="Star themeselection/sneat-html-admin-template-free on GitHub"
-        >Star</a
-      >
-    </li>
-
-    <!-- User -->
-    <li class="nav-item navbar-dropdown dropdown-user dropdown">
-      <a
-        class="nav-link dropdown-toggle hide-arrow p-0"
-        href="javascript:void(0);"
-        data-bs-toggle="dropdown">
-        <div class="avatar avatar-online">
-          <img src="home/assets/img/avatars/1.png" alt class="w-px-40 h-auto rounded-circle" />
-        </div>
-      </a>
-      <ul class="dropdown-menu dropdown-menu-end">
-        <li>
-          <a class="dropdown-item" href="#">
-            <div class="d-flex">
-              <div class="flex-shrink-0 me-3">
-                <div class="avatar avatar-online">
-                  <img src="home/assets/img/avatars/1.png" alt class="w-px-40 h-auto rounded-circle" />
-                </div>
-              </div>
-              <div class="flex-grow-1">
-                <h6 class="mb-0">John Doe</h6>
-                <small class="text-muted">Admin</small>
-              </div>
-            </div>
-          </a>
-        </li>
-        <li>
-          <div class="dropdown-divider my-1"></div>
-        </li>
-        <li>
-          <a class="dropdown-item" href="#">
-            <i class="bx bx-user bx-md me-3"></i><span>My Profile</span>
-          </a>
-        </li>
-        <li>
-          <a class="dropdown-item" href="#"> <i class="bx bx-cog bx-md me-3"></i><span>Settings</span> </a>
-        </li>
-        <li>
-          <a class="dropdown-item" href="#">
-            <span class="d-flex align-items-center align-middle">
-              <i class="flex-shrink-0 bx bx-credit-card bx-md me-3"></i
-              ><span class="flex-grow-1 align-middle">Billing Plan</span>
-              <span class="flex-shrink-0 badge rounded-pill bg-danger">4</span>
-            </span>
-          </a>
-        </li>
-        <li>
-          <div class="dropdown-divider my-1"></div>
-        </li>
-        <li>
-          <a class="dropdown-item" href="javascript:void(0);">
-            <i class="bx bx-power-off bx-md me-3"></i><span>Log Out</span>
-          </a>
-        </li>
-      </ul>
-    </li>
-    <!--/ User -->
-  </ul>
+  
 </div>
 </nav>

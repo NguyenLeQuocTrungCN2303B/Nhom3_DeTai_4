@@ -16,17 +16,17 @@
                 <div class="container-xxl flex-grow-1 container-p-y">
                     <div class="app-brand demo" >
                         <div class="card" style="width: 100%;">
-                            <h3 class="card-header">Gold Price List Today</h3>
+                            <h3 class="card-header" style="color: #696cff">Giá vàng hôm nay</h3>
                             <div class="table-responsive text-nowrap">
-                            <table class="table">
+                            <table class="table" >
                                 <thead class="table-light">
                                 <tr>
-                                    <th>Type-Gold</th>
-                                    <th>buy</th>
-                                    <th>sell</th>
+                                    <th>Loại vàng</th>
+                                    <th>Bán ra</th>
+                                    <th>Mua vào</th>
                                 </tr>
                                 </thead>
-                                <tbody class="table-border-bottom-0">
+                                <tbody class="table-border-bottom-0" >
                                     {% for gold in items_gold %}
                                         <tr>
                                             <td>{{gold.type}}</td>

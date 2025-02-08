@@ -5,7 +5,7 @@ from A_Product_Mng.models import Product
 import requests 
 # Create your views here.
 def home(request):
-   return render(request , 'home.html')
+   return render(request , 'home/index.html')
 
 def products(request):
     products = Product.objects.all()

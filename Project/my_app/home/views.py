@@ -5,7 +5,12 @@ from A_Product_Mng.models import Product
 import requests 
 # Create your views here.
 def home(request):
-   return render(request , 'home/index.html')
+    products = Product.objects.all()
+    template = loader.get_template('home/index.html')
+    context ={
+        'products':products,
+    }
+    return HttpResponse(template.render(context,request))
 
 def products(request):
     products = Product.objects.all()

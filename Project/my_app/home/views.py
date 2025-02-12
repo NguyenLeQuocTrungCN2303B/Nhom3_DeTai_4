@@ -1,10 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.http import HttpResponse, JsonResponse
 from django.template import loader
 from A_Product_Mng.models import *
 import json
 import requests 
 import xml.etree.ElementTree as ET
+from django.contrib.auth.forms import UserCreationForm
 # Create your views here.
 def home(request):
     products = Product.objects.all()
@@ -95,16 +96,19 @@ def updateItem(request):
     return JsonResponse('Item was added', safe=False)
 
 
+
 def register(request):
+    form = CreateUserForm()
+    if request.method == 'POST':
+        form = CreateUserForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('login')
+    context = {'form': form}
+    return render(request, 'home/register.html', context)
+def login(request):
     products = Product.objects.all()
-    template = loader.get_template('home/register.html')
-    context ={
-        'products':products,
-    }
-    return HttpResponse(template.render(context,request))
-def register(request):
-    products = Product.objects.all()
-    template = loader.get_template('home/register.html')
+    template = loader.get_template('home/login.html')
     context ={
         'products':products,
     }

@@ -48,7 +48,6 @@
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     
   </head>
-
   <body>
     <div class="container-xxl d-flex justify-content-center align-items-center" style="min-height: 100vh;">
         <div class="authentication-wrapper authentication-basic container-p-y">
@@ -100,23 +99,30 @@
                 <h4 class="mb-1">Adventure starts here 🚀</h4>
                 <p class="mb-6">Make your app management easy and fun!</p>
   
-                <form id="formAuthentication" class="mb-6" action="index.html">
+                <form id="formAuthentication" class="mb-6" method="POST" action="">
+                  {% csrf_token %}
                   <div class="mb-6">
                     <label for="username" class="form-label">Username</label>
-                    <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username" autofocus="">
+                    {{ form.username }}
                   </div>
                   <div class="mb-6">
                     <label for="email" class="form-label">Email</label>
-                    <input type="text" class="form-control" id="email" name="email" placeholder="Enter your email">
+                    {{ form.email }}
                   </div>
                   <div class="mb-6 form-password-toggle">
                     <label class="form-label" for="password">Password</label>
                     <div class="input-group input-group-merge">
-                      <input type="password" id="password" class="form-control" name="password" placeholder="············" aria-describedby="password">
+                      {{ form.password1 }}
                       <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
                     </div>
                   </div>
-  
+                  <div class="mb-6 form-password-toggle">
+                    <label class="form-label" for="password2">Confirm Password</label>
+                    <div class="input-group input-group-merge">
+                      {{ form.password2 }}
+                      <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
+                    </div>
+                  </div>
                   <div class="my-8">
                     <div class="form-check mb-0 ms-2">
                       <input class="form-check-input" type="checkbox" id="terms-conditions" name="terms">
@@ -126,7 +132,7 @@
                       </label>
                     </div>
                   </div>
-                  <button class="btn btn-primary d-grid w-100">Sign up</button>
+                  <button class="btn btn-primary d-grid w-100" type="submit">Sign up</button>
                 </form>
   
                 <p class="text-center">
@@ -166,4 +172,5 @@
     <!-- Place this tag before closing body tag for github widget button. -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
   </body>
+  
 </html>

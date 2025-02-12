@@ -8,6 +8,7 @@ class Product (models.Model):
     wage_price = models.FloatField()
     Stone_price= models.FloatField()
     price = models.FloatField(null=True, blank=True)
+    detail= models.TextField(null=True, blank=True)
     digital = models.BooleanField(default=False,null=True, blank=False)
     image= models.ImageField(null=True, blank=True)
 

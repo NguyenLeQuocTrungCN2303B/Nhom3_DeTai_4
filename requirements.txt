@@ -1,0 +1,12 @@
+Django==3.2.20
+mysqlclient>=2.0
+psycopg2-binary>=2.8
+asgiref==3.8.1
+sqlparse==0.5.3
+tzdata==2025.1
+certifi==2025.1.31
+charset-normalizer==3.4.1
+idna==3.10
+pillow==11.1.0
+requests==2.32.3
+urllib3==2.3.0

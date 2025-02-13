@@ -1,5 +1,4 @@
 version: '3.9'
-
 services:
   web: 
     build:
@@ -11,17 +10,24 @@ services:
     ports:
       - "8000:8000" 
     depends_on:
-      - db
+      db:
+        condition: service_healthy
   db:
-    image: postgres:14
+    image: mysql:8.0
     environment:
-      POSTGRES_USER: myuser
-      POSTGRES_PASSWORD: 12345678
-      POSTGRES_DB: djangodb
+      MYSQL_DATABASE: djangodb
+      MYSQL_USER: myuser
+      MYSQL_PASSWORD: 12345678
+      MYSQL_ROOT_PASSWORD: 12345678
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - db_data:/var/lib/mysql
     ports:
-      - "5432:5432"
-
+      - "3307:3306"  # Sử dụng cổng 3307 trên máy chủ và ánh xạ đến cổng 3306 trong container
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: always
 volumes:
   db_data:

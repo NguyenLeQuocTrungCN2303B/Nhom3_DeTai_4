@@ -1,22 +1,17 @@
-FROM python:3.12-slim
+FROM python:3.11-slim
 WORKDIR /app
+# Cập nhật và cài đặt các gói cần thiết
 RUN apt-get update && apt-get install -y \
     build-essential \
     libpq-dev \
     pkg-config \
-    libssl-dev \
-    libffi-dev \
-    libmariadb-dev-compat \
-    libmariadb-dev \
+    default-libmysqlclient-dev \
     && rm -rf /var/lib/apt/lists/*
-# Install pip requirements
+# Cài đặt pip và các gói Python
 COPY requirements.txt .
-RUN python -m pip install --upgrade pip
-RUN python -m pip install -r requirements.txt
-
+RUN python -m pip install --upgrade pip && python -m pip install -r requirements.txt
+# Sao chép mã nguồn vào container
 COPY . .
-
 EXPOSE 8000
-
-# During debugging, this entry point will be overridden. For more information, please refer to https://aka.ms/vscode-docker-python-debug
+# Trong quá trình debug, entry point này sẽ bị ghi đè
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

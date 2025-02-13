@@ -81,12 +81,12 @@ WSGI_APPLICATION = 'my_app.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django.db.backends.mysql',
         'NAME': 'djangodb',
         'USER': 'myuser',
         'PASSWORD': '12345678',
-        'HOST':'db',
-        'PORT':'5432',
+        'HOST': 'db',
+        'PORT': '3306',  # Sử dụng cổng trong container
     }
 }
 

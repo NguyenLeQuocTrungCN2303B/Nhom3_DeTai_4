@@ -6,7 +6,7 @@ from django.utils.timezone import now
 from django.core.exceptions import ValidationError
 # Create your models here.
 class Category(models.Model):
-    sub_category=models.ForeignKey('self',on_delete=models.CASCADE, related_name='sub_caterogies',null=True,blank=True)
+    sub_category=models.ForeignKey('self',on_delete=models.CASCADE, related_name='sub_categories',null=True,blank=True)
     is_sub = models.BooleanField(default=False)
     name=models.CharField(max_length=200,null=True)
     slug=models.SlugField(max_length=200,unique=True)
@@ -17,7 +17,7 @@ class CreateUserForm(UserCreationForm):
         model = User
         fields = ['username', 'email', 'first_name', 'last_name', 'password1', 'password2']
 class Product (models.Model):
-    Category=models.ManyToManyField(Category,related_name='product')
+    category=models.ManyToManyField(Category,related_name='product')
     name = models.CharField(max_length=225,null=True)
     kind = models.CharField(max_length=225,null=True)
     weight = models.FloatField()
@@ -38,8 +38,27 @@ class Product (models.Model):
             url = ''
         return url
 
+class Counter(models.Model):
+    """Quầy hàng"""
+    name = models.CharField(max_length=255, unique=True)  # Tên quầy
+    description = models.TextField(blank=True, null=True)  # Mô tả quầy hàng
+
+    def __str__(self):
+        return self.name
+
+class Employee(models.Model):
+    """Nhân viên"""
+    user = models.OneToOneField(User, on_delete=models.CASCADE)  # Liên kết với User
+    counter = models.ForeignKey(Counter, on_delete=models.SET_NULL, null=True, related_name="employees")
+    can_checkout = models.BooleanField(default=True)  # Nhân viên có quyền thanh toán không
+
+    def __str__(self):
+        return self.user.get_full_name() or self.user.username
+
 class Order (models.Model):
     User = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    employee = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, blank=True)  # Nhân viên thanh toán
+    counter = models.ForeignKey(Counter, on_delete=models.SET_NULL, null=True, blank=True)  # Quầy hàng xử lý đơn
     date_ordered = models.DateTimeField(auto_now_add=True)
     complete = models.BooleanField(default=False,null=True, blank=False)
     transaction_id = models.CharField(max_length=225,null=True)
@@ -125,3 +144,4 @@ class Promotion(models.Model):
         if not self.pk and Promotion.objects.exists():
             raise ValidationError("Chỉ có thể có một chương trình khuyến mãi!")
         super().save(*args, **kwargs)
+        

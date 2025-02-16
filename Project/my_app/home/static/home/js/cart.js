@@ -3,18 +3,7 @@ for(i=0;i<updateBtns.length;i++){
     updateBtns[i].addEventListener('click', function(){
         var productId = this.dataset.product
         var action = this.dataset.action
-        console.log('productId:', productId, 'Action:', action)
-
-        console.log('USER:', user)
-        if(user === 'AnonymousUser'){
-            Swal.fire({
-                icon: "error",
-                text: "Bạn chưa đăng nhập!",
-                footer: '<a href="#">Đi tới trang đăng nhập?</a>'
-              }); 
-        }else{
-            updateUserOrder(productId, action)
-        }
+        updateUserOrder(productId, action)
     })
 }
 

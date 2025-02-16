@@ -18,20 +18,61 @@ def indext(request):
     }
     return render(request, 'home/index.html', context)
 
+
+from django import template
+
+register = template.Library()
+
+@register.filter
+def intcomma_custom(value):
+    try:
+        return f"{int(value):,}".replace(",", ".")  # Thay dấu `,` bằng `.`
+    except (ValueError, TypeError):
+        return value
+
+# Hàm lấy giá vàng từ API
+
+
+def get_gold_price():
+    gold_url = 'https://apiforlearning.zendvn.com/api/get-gold'
+    try:
+        gold_response = requests.get(gold_url, verify=False, timeout=5)
+        gold_response.raise_for_status()  # Kiểm tra lỗi HTTP
+        items_gold = gold_response.json()
+
+        if items_gold and "sell" in items_gold[0]:  
+            # Chuyển đổi giá trị "sell" thành số nguyên
+            return int(float(items_gold[0]['sell'].replace(',', '')))
+    
+    except (requests.RequestException, ValueError, IndexError, KeyError):
+        return 0  # Giá mặc định nếu API lỗi
+    
+    return 0  # Trả về giá mặc định nếu có lỗi dữ liệu
+
+
+# View xử lý danh sách sản phẩm
 def products(request):
     products = Product.objects.all()
-    gold_url = 'https://apiforlearning.zendvn.com/api/get-gold'
-    gold_response = requests.get(gold_url, verify=False)
-    items_gold = gold_response.json()
+    gold_price = get_gold_price()
+
+    updated_products = []
     for product in products:
-        product.price = (product.weight * float(items_gold[0]['sell'].replace(',', '')) + product.wage_price + product.Stone_price) * 1.3
-        product.save()
+        new_price = product.weight * gold_price + product.wage_price + product.Stone_price
+        if product.price != new_price:  
+            product.price = new_price
+            updated_products.append(product)
+
+    if updated_products:
+        Product.objects.bulk_update(updated_products, ['price'])  
+
+    
     template = loader.get_template('home/products.html')
     context = {
         'products': products,
-        'items_gold': items_gold,
+        'gold_price': gold_price,
     }
     return HttpResponse(template.render(context, request))
+
 
 def edit_product(request):
     product = Product.objects.get(id=1)

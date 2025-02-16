@@ -1,5 +1,5 @@
 {% extends "master-page.html"%}
-
+{% load custom_filters %}
 {%block nav-bar%}
     {% include '../includes/nav-bar.html'%}
 {%endblock%}
@@ -35,7 +35,7 @@
                 
                                     <div class="price-area my-4">
                                         <p class="old-price mb-1"><del>$100</del> <span class="old-price-discount text-danger">(20% off)</span></p>
-                                        <p class="new-price text-bold mb-1">{{product.price}}.000vnđ</p>
+                                        <p class="new-price text-bold mb-1">{{ product.price|floatformat:0|intcomma_custom }}₫   </p>
                                         <p class="text-secondary mb-1">(Additional tax may apply on checkout)</p>
                 
                                     </div>

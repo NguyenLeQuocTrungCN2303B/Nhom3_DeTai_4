@@ -1,5 +1,5 @@
 {% extends "master-page.html"%}
-
+{% load custom_filters %}
 {%block nav-bar%}
     {% include '../includes/nav-bar.html'%}
 {%endblock%}
@@ -73,7 +73,7 @@
                                       <div class="text-md-end">
                                         <button type="button" class="btn-close btn-pinned" aria-label="Đóng"></button>
                                         <div class="d-flex d-md-block align-items-center mb-2 gap-2 justify-content-center justify-content-sm-start">
-                                          <div class="my-2 mt-md-8 mb-md-4"><span class="text-primary"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">{{item.product.price}} .000vnđ/ </font></font></span><s class="text-body"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">{{item.product.price}} .000vnđ/</font></font></s></div>
+                                          <div class="my-2 mt-md-8 mb-md-4"><span class="text-primary"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">{{ item.product.price|floatformat:0|intcomma_custom }}₫ </font></font></span><s class="text-body"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">{{ item.product.price|floatformat:0|intcomma_custom }}₫ </font></font></s></div>
                                           <button type="button" class="btn btn-sm btn-label-primary"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Di chuyển đến danh sách mong muốn</font></font></button>
                                         </div>
                                       </div>
@@ -122,13 +122,13 @@
                             <h6><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Chi tiết giá</font></font></h6>
                             <dl class="row mb-0 text-heading">
                               <dt class="col-6 fw-normal"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Tổng số túi</font></font></dt>
-                              <dd class="col-6 text-end"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">{{order.get_cart_total}}.000vnd</font></font></dd>
+                              <dd class="col-6 text-end"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">{{ order.get_cart_total|floatformat:0|intcomma_custom }}₫ </font></font></dd>
               
                               <dt class="col-6 fw-normal"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Phiếu giảm giá</font></font></dt>
                               <dd class="col-6 text-primary text-end"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Áp dụng phiếu giảm giá</font></font></dd>
               
                               <dt class="col-6 fw-normal"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Tổng đơn hàng</font></font></dt>
-                              <dd class="col-6 text-end"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">{{order.get_cart_total}}.000vnd</font></font></dd>
+                              <dd class="col-6 text-end"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">{{ order.get_cart_total|floatformat:0|intcomma_custom }}₫</font></font></dd>
               
                               <dt class="col-6 fw-normal"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Phí giao hàng</font></font></dt>
                               <dd class="col-6 text-end"><s class="text-body-secondary"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">5,00 đô la</font></font></s> <span class="badge bg-label-success ms-1"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Miễn phí</font></font></span></dd>

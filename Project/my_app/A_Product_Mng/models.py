@@ -35,9 +35,6 @@ class Product (models.Model):
         except:
             url = ''
         return url
-    @property
-    def total_price(self,gold_price):
-        return (self.wage_price + self.Stone_price + self.weight*gold_price)
 
 class Order (models.Model):
     User = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)

@@ -93,10 +93,12 @@ def shopping_cart(request):
         customer = request.user
         order, created = Order.objects.get_or_create(User=customer, complete=False)
         items = order.orderitem_set.all()
+        promotion = Promotion.objects.filter(start_date__lte=now(), end_date__gte=now()).first()
     else:
         items = []
         order = {'get_cart_items': 0, 'get_cart_total': 0}
-    context = {'items': items, 'order': order}
+        promotion = None  # Không có khuyến mãi nếu chưa đăng nhập
+    context = {'items': items, 'order': order,'promotion': promotion}
     return render(request, 'home/shopping_cart.html', context)
 
 def detail(request):

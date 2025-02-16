@@ -1,0 +1,8 @@
+<h2>{{ counter.name }}</h2>
+<p>{{ counter.description }}</p>
+<h3>Nhân viên:</h3>
+<ul>
+    {% for employee in employees %}
+        <li>{{ employee.user.username }}</li>
+    {% endfor %}
+</ul>

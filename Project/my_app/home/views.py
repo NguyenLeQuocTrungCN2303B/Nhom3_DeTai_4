@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse, JsonResponse
 from django.template import loader
 from A_Product_Mng.models import *
@@ -176,3 +176,23 @@ def category(request):
         'active_category': active_category
     }
     return render(request, "home/category.html", context)
+
+def counter_list(request):
+    counters = Counter.objects.all()
+    return render(request, 'home/counter_list.html', {'counters': counters})
+def counter_detail(request, counter_id):
+    counter = get_object_or_404(Counter, id=counter_id)
+    employees = counter.employees.all()  # Lấy danh sách nhân viên của quầy này
+    return render(request, 'home/counter_detail.html', {'counter': counter, 'employees': employees})
+from django.contrib.auth.decorators import login_required
+@login_required
+def checkout(request):
+    if not request.user.is_staff and not hasattr(request.user, 'employee'):
+        return HttpResponse("Bạn không có quyền thanh toán", status=403)
+    
+    order = Order.objects.filter(User=request.user, complete=False).first()
+    if order:
+        order.complete = True
+        order.save()
+        return HttpResponse("Thanh toán thành công")
+    return HttpResponse("Không có đơn hàng để thanh toán")

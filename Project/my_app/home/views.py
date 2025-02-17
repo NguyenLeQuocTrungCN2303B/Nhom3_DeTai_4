@@ -249,7 +249,6 @@ def counter_detail(request, counter_id):
     employees = counter.employees.all()  # Lấy danh sách nhân viên của quầy này
     return render(request, 'home/counter_detail.html', {'counter': counter, 'employees': employees})
 
-
 from django.contrib.auth.decorators import login_required
 
 @login_required

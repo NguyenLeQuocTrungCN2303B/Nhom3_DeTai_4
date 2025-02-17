@@ -15,5 +15,5 @@ urlpatterns = [
     path('category/', views.category, name='category'),
     #quầy hàng và nhân viên
     path('counter_list/', views.counter_list, name='counter_list'),
-    #path('counter_detail/<int:counter_id>/', views.counter_detail, name='counter_detail'),
+    path('counter_detail/<int:counter_id>/', views.counter_detail, name='counter_detail'),
 ]

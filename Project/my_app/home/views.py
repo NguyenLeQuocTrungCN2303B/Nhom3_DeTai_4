@@ -2,12 +2,12 @@ from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse, JsonResponse
 from django.template import loader
 from A_Product_Mng.models import *
-import json
-import requests 
+import json 
 import xml.etree.ElementTree as ET
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
+import requests
 
 def indext(request):
     categories=Category.objects.filter(is_sub=False)

@@ -129,3 +129,8 @@ MEDIA_URL = '/images/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'home', 'static', 'home', 'images')
 
 
+SESSION_ENGINE = "django.contrib.sessions.backends.db"
+SESSION_COOKIE_NAME = "sessionid"  # Đảm bảo tên cookie session không bị đổi sai
+SESSION_COOKIE_SECURE = False  # Đặt True nếu chạy HTTPS
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = "Lax"

@@ -51,6 +51,23 @@ class Product (models.Model):
             url = ''
         return url
 
+class Counter(models.Model):
+    """Quầy hàng"""
+    name = models.CharField(max_length=255, unique=True)  # Tên quầy
+    description = models.TextField(blank=True, null=True)  # Mô tả quầy hàng
+
+    def __str__(self):
+        return self.name
+
+class Employee(models.Model):
+    """Nhân viên"""
+    user = models.OneToOneField(User, on_delete=models.CASCADE)  # Liên kết với User
+    counter = models.ForeignKey(Counter, on_delete=models.SET_NULL, null=True, related_name="employees")
+    can_checkout = models.BooleanField(default=True)  # Nhân viên có quyền thanh toán không
+
+    def __str__(self):
+        return self.user.get_full_name() or self.user.username
+
 class Order (models.Model):
     User = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     employee = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, blank=True)  # Nhân viên thanh toán
@@ -140,3 +157,4 @@ class Promotion(models.Model):
         if not self.pk and Promotion.objects.exists():
             raise ValidationError("Chỉ có thể có một chương trình khuyến mãi!")
         super().save(*args, **kwargs)
+        

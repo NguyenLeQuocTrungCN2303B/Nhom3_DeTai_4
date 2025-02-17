@@ -2,16 +2,20 @@ from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse, JsonResponse
 from django.template import loader
 from A_Product_Mng.models import *
-import json
-import requests 
+import json 
 import xml.etree.ElementTree as ET
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
+
+import requests
+
+
 from django.utils.timezone import now
 from home.utils import get_session_cart
 from django import template
 from A_Product_Mng.models import Product, Order, Promotion
+
 def indext(request):
     categories=Category.objects.filter(is_sub=False)
     products = Product.objects.all()
@@ -235,14 +239,9 @@ def category(request):
     }
     return render(request, "home/category.html", context)
 
-
-# nhân viên và quầy hàng 
-
-
 def counter_list(request):
     counters = Counter.objects.all()
     return render(request, 'home/counter_list.html', {'counters': counters})
-
 
 def counter_detail(request, counter_id):
     counter = get_object_or_404(Counter, id=counter_id)
@@ -262,3 +261,4 @@ def checkout(request):
         order.save()
         return HttpResponse("Thanh toán thành công")
     return HttpResponse("Không có đơn hàng để thanh toán")
+

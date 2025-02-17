@@ -1,32 +1,45 @@
-var updateBtns = document.getElementsByClassName('update-cart')
-for(i=0;i<updateBtns.length;i++){
-    updateBtns[i].addEventListener('click', function(){
-        var productId = this.dataset.product
-        var action = this.dataset.action
-        updateUserOrder(productId, action)
-    })
+var updateBtns = document.getElementsByClassName('update-cart');
+for (i = 0; i < updateBtns.length; i++) {
+    updateBtns[i].addEventListener('click', function () {
+        var productId = this.dataset.product;
+        var action = this.dataset.action;
+        console.log('productId:', productId, 'Action:', action);
+
+        // Kiểm tra người dùng đã đăng nhập chưa
+        console.log('USER:', user);
+        if (user === 'AnonymousUser') {
+            Swal.fire({
+                icon: "error",
+                text: "Bạn chưa đăng nhập!",
+                footer: '<a href="#">Đi tới trang đăng nhập?</a>',
+            });
+        } else {
+            updateUserOrder(productId, action); // Gọi hàm xử lý giỏ hàng
+        }
+    });
 }
 
+// Hàm cập nhật giỏ hàng
 function updateUserOrder(productId, action) {
     console.log('User is authenticated, sending data...');
 
-    var url = '/update_item/';
+    var url = '/update_item/'; // Địa chỉ API xử lý
 
     fetch(url, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRFToken': csrftoken,
+            'X-CSRFToken': csrftoken, // CSRF token
         },
-        body: JSON.stringify({ 'productId': productId, 'action': action })
+        body: JSON.stringify({ 'productId': productId, 'action': action }),
     })
     .then(response => response.json())
     .then(data => {
         console.log('data:', data);
-
-        // Gọi hàm showAlert và truyền callback reloadPage
-        showAlert(function() {
-            setTimeout(reloadPage, 10000); // Chờ 2 giây trước khi reload
+        
+        // Hiển thị thông báo thành công
+        showAlert(function () {
+            setTimeout(reloadPage, 10000); // Reload sau 10 giây
         });
     })
     .catch(error => {
@@ -47,7 +60,7 @@ function showAlert(callback) {
         title: "Đã thêm vào giỏ hàng",
         iconColor: "#696cff",
         showConfirmButton: false,
-        timer: 1500
+        timer: 1500, // Hiển thị alert trong 1.5 giây
     }).then(() => {
         if (callback) callback(); // Gọi callback sau khi alert đóng
     });
@@ -55,7 +68,5 @@ function showAlert(callback) {
 
 // Hàm reload trang
 function reloadPage() {
-    location.reload();
+    location.reload(); // Reload trang hiện tại
 }
-
-

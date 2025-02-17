@@ -14,7 +14,7 @@
         <div class="layout-page" style="padding: 0px;">
             <div class="content-wrapper">
                 <div class="container-xxl flex-grow-1 container-p-y" style="background-color: #ffffff; background-clip: content-box;display: flex;flex-direction: column;justify-content: center;align-items: center;"> 
-                    {% for product in products %}
+                    {% with product=products %}
                     <div class="container my-5">
                         <div class="row">
                             <div class="col-md-5">
@@ -83,13 +83,7 @@
                             </div>
                         </div>
                     </div>
-                
-                
-                
-                
-                
-                    </div>
-                 {%endfor%}
+                {% endwith %}
                 </div>
             </div>
         </div>

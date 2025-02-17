@@ -2,13 +2,16 @@ from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse, JsonResponse
 from django.template import loader
 from A_Product_Mng.models import *
-import json 
+import json
+import requests 
 import xml.etree.ElementTree as ET
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
-import requests
-
+from django.utils.timezone import now
+from home.utils import get_session_cart
+from django import template
+from A_Product_Mng.models import Product, Order, Promotion
 def indext(request):
     categories=Category.objects.filter(is_sub=False)
     products = Product.objects.all()
@@ -18,9 +21,7 @@ def indext(request):
     }
     return render(request, 'home/index.html', context)
 
-
-from django import template
-
+  
 register = template.Library()
 
 @register.filter
@@ -48,6 +49,70 @@ def get_gold_price():
         return 0  # Giá mặc định nếu API lỗi
     
     return 0  # Trả về giá mặc định nếu có lỗi dữ liệu
+
+def detail(request):
+    # Lấy thông tin sản phẩm
+    product_id = request.GET.get("id", "")
+    product = get_object_or_404(Product, id=product_id)
+
+    if request.user.is_authenticated:
+        customer = request.user
+        order, created = Order.objects.get_or_create(User=customer, complete=False)
+        items = order.orderitem_set.all()
+    else:
+        items, order = get_session_cart(request)
+
+    # Xử lý thêm sản phẩm vào giỏ hàng
+    if request.method == "POST":
+        product_id = request.POST.get("product_id")
+        if not product_id:
+            messages.error(request, "Sản phẩm không hợp lệ!")
+            return redirect("detail")
+
+        product = get_object_or_404(Product, id=product_id)
+
+        if request.user.is_authenticated:
+            order_item, created = order.orderitem_set.get_or_create(product=product)
+            order_item.quantity += 1
+            order_item.save()
+        else:
+            cart = request.session.get("cart", {})
+            if product_id in cart:
+                cart[product_id]["quantity"] += 1
+            else:
+                cart[product_id] = {
+                    "quantity": 1,
+                    "price": float(product.price),
+                    "image": product.imageURL,
+                    "detail": product.detail
+                }
+
+            request.session["cart"] = cart  
+            request.session.modified = True  # Đảm bảo Django lưu session
+
+        messages.success(request, "Sản phẩm đã được thêm vào giỏ hàng!")
+        return redirect("shopping_cart")  # Chuyển hướng đến giỏ hàng
+
+    # Trả dữ liệu về giao diện
+    context = {"items": items, "order": order, "product": product}  
+    return render(request, "home/detail.html", context)
+
+
+def shopping_cart(request):
+    if request.user.is_authenticated:
+        customer = request.user
+        order, created = Order.objects.get_or_create(User=customer, complete=False)
+        items = order.orderitem_set.all()
+        total_price = order.get_cart_total_after_discount  # Lấy tổng sau giảm giá
+    else:
+        items, order = get_session_cart(request)  # Dùng lại hàm có sẵn
+        total_price = order.get("get_cart_total", 0)  # Lấy tổng tiền từ session
+
+    # Kiểm tra khuyến mãi (nếu có)
+    promotion = Promotion.objects.filter(start_date__lte=now(), end_date__gte=now()).first()
+
+    context = {"items": items, "order": order, "promotion": promotion, "total_price": total_price}
+    return render(request, "home/shopping_cart.html", context)
 
 
 # View xử lý danh sách sản phẩm
@@ -88,31 +153,24 @@ def gold_price(request):
     items_gold = gold_response.json()
     return render(request, 'home/gold-price.html', {"items_gold": items_gold})
 
+
+
 def shopping_cart(request):
     if request.user.is_authenticated:
+        # Nếu đã đăng nhập, lấy giỏ hàng từ database
         customer = request.user
         order, created = Order.objects.get_or_create(User=customer, complete=False)
         items = order.orderitem_set.all()
-        promotion = Promotion.objects.filter(start_date__lte=now(), end_date__gte=now()).first()
     else:
-        items = []
-        order = {'get_cart_items': 0, 'get_cart_total': 0}
-        promotion = None  # Không có khuyến mãi nếu chưa đăng nhập
-    context = {'items': items, 'order': order,'promotion': promotion}
-    return render(request, 'home/shopping_cart.html', context)
+        # Nếu chưa đăng nhập, lấy giỏ hàng từ session
+        items, order = get_session_cart(request)
 
-def detail(request):
-    if request.user.is_authenticated:
-        customer = request.user
-        order, created = Order.objects.get_or_create(User=customer, complete=False)
-        items = order.orderitem_set.all()
-    else:
-        items = []
-        order = None
-    id = request.GET.get('id', '')
-    products = Product.objects.filter(id=id)
-    context = {'items': items, 'order': order, 'products': products}
-    return render(request, 'home/detail.html', context)
+    # Kiểm tra khuyến mãi
+    promotion = Promotion.objects.filter(start_date__lte=now(), end_date__gte=now()).first()
+
+    # Trả dữ liệu về giao diện
+    context = {"items": items, "order": order, "promotion": promotion}
+    return render(request, "home/shopping_cart.html", context)
 
 def updateItem(request):
     data = json.loads(request.body)
@@ -177,9 +235,15 @@ def category(request):
     }
     return render(request, "home/category.html", context)
 
+
+# nhân viên và quầy hàng 
+
+
 def counter_list(request):
     counters = Counter.objects.all()
     return render(request, 'home/counter_list.html', {'counters': counters})
+
+
 def counter_detail(request, counter_id):
     counter = get_object_or_404(Counter, id=counter_id)
     employees = counter.employees.all()  # Lấy danh sách nhân viên của quầy này
@@ -187,6 +251,7 @@ def counter_detail(request, counter_id):
 
 
 from django.contrib.auth.decorators import login_required
+
 @login_required
 def checkout(request):
     if not request.user.is_staff and not hasattr(request.user, 'employee'):

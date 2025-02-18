@@ -17,7 +17,7 @@
             
             <div id="wizard-checkout" class="bs-stepper wizard-icons wizard-icons-example">
                 <div class="bs-stepper-content border-top">
-                  <form id="wizard-checkout-form" onsubmit="return false" >
+                  <form id="wizard-checkout-form" onsubmit="return false">
                     <!-- Cart -->
                     <div id="checkout-cart" class="content active dstepper-block">
                       <div class="row">
@@ -139,16 +139,9 @@
                               <dd class="col-6 fw-medium text-end text-heading mb-0"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">{{ order.get_cart_total_after_discount|floatformat:0|intcomma_custom }}₫</font></font></dd>
                             </dl>
                           </div>
-                          <!-- Trong trang shopping_cart.html -->
                           <div class="d-grid">
-                            <button class="btn btn-primary btn-next" 
-                                    onclick="window.location.href='{% url 'create_invoice' order_id=order.id %}'">
-                                <font style="vertical-align: inherit;">
-                                    <font style="vertical-align: inherit;">Tạo hóa đơn cho khách hàng</font>
-                                </font>
-                            </button>
-                         </div>                        
-                        
+                            <button class="btn btn-primary btn-next"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Yêu cầu nhân viên thanh toán</font></font></button>
+                          </div>
                         </div>
                       </div>
                     </div>

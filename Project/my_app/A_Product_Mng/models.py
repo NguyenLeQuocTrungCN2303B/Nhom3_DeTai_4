@@ -17,7 +17,6 @@ class CreateUserForm(UserCreationForm):
         model = User
         fields = ['username', 'email', 'first_name', 'last_name', 'password1', 'password2']
 class Product (models.Model):
-    barcode = models.CharField(max_length=100, unique=True, null=True, blank=True)
     category=models.ManyToManyField(Category,related_name='product')
     name = models.CharField(max_length=225,null=True)
     kind = models.CharField(max_length=225,null=True)
@@ -39,10 +38,27 @@ class Product (models.Model):
             url = ''
         return url
 
+class Counter(models.Model):
+    """Quầy hàng"""
+    name = models.CharField(max_length=255, unique=True)  # Tên quầy
+    description = models.TextField(blank=True, null=True)  # Mô tả quầy hàng
 
+    def __str__(self):
+        return self.name
+
+class Employee(models.Model):
+    """Nhân viên"""
+    user = models.OneToOneField(User, on_delete=models.CASCADE)  # Liên kết với User
+    counter = models.ForeignKey(Counter, on_delete=models.SET_NULL, null=True, related_name="employees")
+    can_checkout = models.BooleanField(default=True)  # Nhân viên có quyền thanh toán không
+
+    def __str__(self):
+        return self.user.get_full_name() or self.user.username
 
 class Order (models.Model):
-    employee = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, blank=True, related_name="orders")
+    User = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    employee = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, blank=True)  # Nhân viên thanh toán
+    counter = models.ForeignKey(Counter, on_delete=models.SET_NULL, null=True, blank=True)  # Quầy hàng xử lý đơn
     date_ordered = models.DateTimeField(auto_now_add=True)
     complete = models.BooleanField(default=False,null=True, blank=False)
     transaction_id = models.CharField(max_length=225,null=True)
@@ -74,7 +90,7 @@ class Order (models.Model):
             total *= (1 - promotion.discount_percentage / 100)
 
         return round(total, 2)  # Làm tròn 2 chữ số thập phân
-  
+    
 class OrderItem (models.Model):
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, blank=True)
     order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True, blank=True)
@@ -85,36 +101,17 @@ class OrderItem (models.Model):
         total = self.product.price * self.quantity
         return total
 
-class Customer(models.Model):
-    full_name = models.CharField(max_length=255)  # Tên khách hàng
-    email = models.EmailField(unique=True)  # Email duy nhất
-    phone_number = models.CharField(max_length=20, blank=True, null=True)  # Số điện thoại (không bắt buộc)
+class ShippingAddress (models.Model):
+    User = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True, blank=True)
+    address = models.CharField(max_length=225,null=True)
+    city = models.CharField(max_length=225,null=True)
+    state = models.CharField(max_length=225,null=True)
+    mobile = models.CharField(max_length=10,null=True)
+    date_added = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.full_name
-
-class CustomerForm(forms.ModelForm):
-    class Meta:
-        model = Customer
-        fields = ['full_name', 'email', 'phone_number']  # Các trường thông tin khách hàng
-
-
-class Invoice(models.Model):
-    """Mô hình hóa đơn với chi tiết sản phẩm"""
-    order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True, related_name="invoices")  # Liên kết với đơn hàng
-    customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, blank=True)  # Liên kết với khách hàn
-    payment_date = models.DateTimeField(auto_now_add=True)  # Ngày thanh toán
-    status = models.CharField(max_length=50, default='completed')  # Trạng thái thanh toán (completed, pending, etc.)
-
-    @property
-    def get_order_items(self):
-        """Trả về các sản phẩm trong hóa đơn từ OrderItem"""
-        return self.order.orderitem_set.all()
-    
-
-    
-
-
+        return self.address
 
 
 

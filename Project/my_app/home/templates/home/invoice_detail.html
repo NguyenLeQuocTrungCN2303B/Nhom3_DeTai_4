@@ -1,0 +1,18 @@
+
+
+{% block content %}
+  <h1>Invoice Detail</h1>
+
+  <div class="invoice-details">
+    <p><strong>Invoice ID:</strong> {{ invoice.id }}</p>
+    <p><strong>Order ID:</strong> {{ invoice.order.id }}</p>
+    <p><strong>Customer Name:</strong> {{ invoice.customer.full_name }}</p>
+    <p><strong>Email:</strong> {{ invoice.customer.email }}</p>
+    <p><strong>Phone Number:</strong> {{ invoice.customer.phone_number }}</p>
+    <p><strong>Status:</strong> {{ invoice.status }}</p>
+    <p><strong>Payment Date:</strong> {{ invoice.payment_date }}</p>
+  </div>
+
+  <a href="{% url 'create_invoice' order_id=invoice.order.id %}" class="btn btn-primary">Create New Invoice</a>
+
+{% endblock %}

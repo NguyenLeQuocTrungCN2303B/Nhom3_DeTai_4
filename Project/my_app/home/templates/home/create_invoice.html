@@ -1,0 +1,5 @@
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}  <!-- Hiển thị form -->
+    <button type="submit" class="btn btn-primary">Tạo hóa đơn</button>
+</form>

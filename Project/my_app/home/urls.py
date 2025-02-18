@@ -14,8 +14,11 @@ urlpatterns = [
     path('logout/', views.logoutPage, name='logout'),
     path('category/', views.category, name='category'),
     #quầy hàng và nhân viên
+
     path('create_invoice/<int:order_id>/', views.create_invoice, name='create_invoice'),
     path('create_invoice', views.create_invoice, name='create_invoice'),
     path('invoice/<int:invoice_id>/', views.invoice_detail, name='invoice_detail'),
     
+
+
 ]

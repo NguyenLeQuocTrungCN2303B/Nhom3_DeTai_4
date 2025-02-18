@@ -16,19 +16,6 @@ class CreateUserForm(UserCreationForm):
     class Meta:
         model = User
         fields = ['username', 'email', 'first_name', 'last_name', 'password1', 'password2']
-class Counter(models.Model):
-    """Quầy hàng"""
-    name = models.CharField(max_length=255, unique=True)  # Tên quầy
-    description = models.TextField(blank=True, null=True)  # Mô tả quầy hàng
-    def __str__(self):
-        return self.name
-class Employee(models.Model):
-    """Nhân viên"""
-    user = models.OneToOneField(User, on_delete=models.CASCADE)  # Liên kết với User
-    counter = models.ForeignKey(Counter, on_delete=models.SET_NULL, null=True, related_name="employees")
-    can_checkout = models.BooleanField(default=True)  # Nhân viên có quyền thanh toán không
-    def __str__(self):
-        return self.user.get_full_name() or self.user.username
 class Product (models.Model):
     barcode = models.CharField(max_length=100, unique=True, null=True, blank=True)
     category=models.ManyToManyField(Category,related_name='product')
@@ -51,6 +38,7 @@ class Product (models.Model):
         except:
             url = ''
         return url
+
 
 
 class Order (models.Model):
@@ -159,3 +147,4 @@ class Promotion(models.Model):
         if not self.pk and Promotion.objects.exists():
             raise ValidationError("Chỉ có thể có một chương trình khuyến mãi!")
         super().save(*args, **kwargs)
+        

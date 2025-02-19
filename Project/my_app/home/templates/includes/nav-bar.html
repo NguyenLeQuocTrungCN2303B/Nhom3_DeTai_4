@@ -33,10 +33,10 @@ id="layout-navbar">
         <a class="nav-link" href="javascript:void(0)" tabindex="-1" style="color: #696cff;">Khuyến mãi</a>
       </li>
     </ul>
-    <form class="d-flex" onsubmit="return false">
-      <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+    <form class="d-flex" method="GET" action="{% url 'search_product' %}">
+      <input class="form-control me-2" type="search" name="q" placeholder="Search" aria-label="Search" value="{{ request.GET.q }}">
       <button class="btn btn-outline-primary" type="submit">Search</button>
-    </form>  
+    </form>   
   </div>
   
 </div>

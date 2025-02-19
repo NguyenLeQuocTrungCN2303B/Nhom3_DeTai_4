@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.utils.timezone import now
 from django.core.exceptions import ValidationError
+import random
+import string
 # Create your models here.
 class Category(models.Model):
     sub_category=models.ForeignKey('self',on_delete=models.CASCADE, related_name='sub_categories',null=True,blank=True)
@@ -31,16 +33,26 @@ class Employee(models.Model):
         return self.user.get_full_name() or self.user.username
 class Product (models.Model):
     barcode = models.CharField(max_length=100, unique=True, null=True, blank=True)
-    category=models.ManyToManyField(Category,related_name='product')
     name = models.CharField(max_length=225,null=True)
-    kind = models.CharField(max_length=225,null=True)
     weight = models.FloatField()
     wage_price = models.FloatField()
     Stone_price= models.FloatField()
-    price = models.FloatField(null=True, blank=True)
-    detail= models.TextField(null=True, blank=True)
-    digital = models.BooleanField(default=False,null=True, blank=False)
+    REGULAR = 'regular'
+    GEMSTONE = 'gemstone'
+    KIND_CHOICES = [
+        (REGULAR, 'Đá thường'),
+        (GEMSTONE, 'Đá quý'),
+    ]
+    kind = models.CharField(
+        max_length=10,
+        choices=KIND_CHOICES,
+        default=REGULAR,  # Mặc định là đá thường
+        null=True
+    )
     image= models.ImageField(null=True, blank=True)
+    category=models.ManyToManyField(Category,related_name='product')
+    detail= models.TextField(null=True, blank=True)
+    price = models.FloatField(null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -51,6 +63,15 @@ class Product (models.Model):
         except:
             url = ''
         return url
+    def generate_barcode(self):
+        # Tạo mã vạch ngẫu nhiên dài 12 ký tự gồm chữ và số
+        return ''.join(random.choices(string.digits, k=12))
+
+    def save(self, *args, **kwargs):
+        # Nếu barcode chưa được gán, tự động tạo mã vạch
+        if not self.barcode:
+            self.barcode = self.generate_barcode()
+        super().save(*args, **kwargs)
 
 
 class Order (models.Model):
@@ -94,8 +115,11 @@ class OrderItem (models.Model):
     date_added = models.DateTimeField(auto_now_add=True)
     @property
     def get_total(self):
-        total = self.product.price * self.quantity
-        return total
+        if self.product and self.product.price is not None:
+            total = self.product.price * self.quantity
+            return total
+        else:
+            return 0
 
 class Customer(models.Model):
     full_name = models.CharField(max_length=255)  # Tên khách hàng
@@ -123,13 +147,6 @@ class Invoice(models.Model):
         """Trả về các sản phẩm trong hóa đơn từ OrderItem"""
         return self.order.orderitem_set.all()
     
-
-    
-
-
-
-
-
 class Promotion(models.Model):
     name = models.CharField(max_length=255)  # Tên chương trình khuyến mãi
     description = models.TextField(blank=True, null=True)  # Mô tả khuyến mãi
@@ -159,3 +176,10 @@ class Promotion(models.Model):
         if not self.pk and Promotion.objects.exists():
             raise ValidationError("Chỉ có thể có một chương trình khuyến mãi!")
         super().save(*args, **kwargs)
+
+
+
+
+
+
+

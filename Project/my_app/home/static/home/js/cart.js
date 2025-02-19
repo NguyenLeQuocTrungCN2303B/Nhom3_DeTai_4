@@ -57,14 +57,15 @@ function updateUserOrder(productId, action) {
 function showAlert(callback) {
     Swal.fire({
         icon: "success",
-        title: "Đã thêm vào giỏ hàng",
+        title: "Đã cập nhật giỏ hàng",
         iconColor: "#696cff",
         showConfirmButton: false,
         timer: 1500, // Hiển thị alert trong 1.5 giây
     }).then(() => {
-        if (callback) callback(); // Gọi callback sau khi alert đóng
+        location.reload(); // Reload ngay sau khi alert đóng
     });
 }
+
 
 // Hàm reload trang
 function reloadPage() {

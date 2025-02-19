@@ -1,18 +1,119 @@
-
-
+{% extends "master-page.html"%}
 {% block content %}
-  <h1>Invoice Detail</h1>
 
-  <div class="invoice-details">
-    <p><strong>Invoice ID:</strong> {{ invoice.id }}</p>
-    <p><strong>Order ID:</strong> {{ invoice.order.id }}</p>
-    <p><strong>Customer Name:</strong> {{ invoice.customer.full_name }}</p>
-    <p><strong>Email:</strong> {{ invoice.customer.email }}</p>
-    <p><strong>Phone Number:</strong> {{ invoice.customer.phone_number }}</p>
-    <p><strong>Status:</strong> {{ invoice.status }}</p>
-    <p><strong>Payment Date:</strong> {{ invoice.payment_date }}</p>
-  </div>
+<style>
+    .invoice-container {
+        max-width: 800px;
+        margin: auto;
+        padding: 20px;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    h1 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 20px;
+    }
+    .invoice-details {
+        padding: 15px;
+        background: #f9f9f9;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+    .invoice-details p {
+        margin: 5px 0;
+        font-size: 16px;
+    }
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+    .table th, .table td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: center;
+    }
+    .table th {
+        background: #007bff;
+        color: white;
+    }
+    .total-price {
+        text-align: right;
+        font-size: 18px;
+        font-weight: bold;
+        margin-top: 10px;
+    }
+    .btn-container {
+        text-align: center;
+        margin-top: 20px;
+    }
+    .btn {
+        display: inline-block;
+        padding: 10px 15px;
+        font-size: 16px;
+        background: #28a745;
+        color: white;
+        border-radius: 5px;
+        text-decoration: none;
+    }
+    .btn:hover {
+        background: #218838;
+    }
+</style>
 
-  <a href="{% url 'create_invoice' order_id=invoice.order.id %}" class="btn btn-primary">Create New Invoice</a>
+<div class="invoice-container">
+    <h1>📄 Chi Tiết Hóa Đơn</h1>
+
+    <!-- Thông tin hóa đơn -->
+    <div class="invoice-details">
+        <p><strong>Mã hóa đơn:</strong> {{ invoice.id }}</p>
+        <p><strong>Mã đơn hàng:</strong> {{ invoice.order.id }}</p>
+        <p><strong>Khách hàng:</strong> {{ invoice.customer.full_name }}</p>
+        <p><strong>Email:</strong> {{ invoice.customer.email }}</p>
+        <p><strong>Số điện thoại:</strong> {{ invoice.customer.phone_number }}</p>
+        <p><strong>Trạng thái:</strong> {{ invoice.status }}</p>
+        <p><strong>Ngày thanh toán:</strong> {{ invoice.payment_date }}</p>
+    </div>
+
+    <!-- Bảng danh sách sản phẩm -->
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Sản phẩm</th>
+                <th>Số lượng</th>
+                <th>Đơn giá</th>
+                <th>Thành tiền</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in invoice.order.orderitem_set.all %}
+            <tr>
+                <td>{{ item.product.name }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.product.price }} VNĐ</td>
+                <td>{{ item.get_total }} VNĐ</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Tổng tiền -->
+    <p class="total-price">Tổng tiền: {{ invoice.order.get_cart_total }} VNĐ</p>
+
+    <!-- Nút tạo hóa đơn mới -->
+    < class="btn-container">
+        <a href="{% url 'create_invoice' invoice.order.id %}" class="btn">📌 Tạo hóa đơn mới</a>
+        <a href="{% url 'generate_invoice_pdf' invoice.id %}" class="btn btn-download">📥 Xuất PDF</a>
+      </div>
+      
+      <script>
+          function printInvoice() {
+              window.print();
+          }
+      </script>      
+  
+</div>
 
 {% endblock %}

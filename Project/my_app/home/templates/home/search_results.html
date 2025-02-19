@@ -1,0 +1,12 @@
+
+
+{% if products %}
+    <h2>Kết quả tìm kiếm:</h2>
+    <ul>
+        {% for product in products %}
+            <li>{{ product.name }} - {{ product.price }} VND</li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>Không tìm thấy sản phẩm nào.</p>
+{% endif %}

@@ -1,5 +1,114 @@
-<form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}  <!-- Hiển thị form -->
-    <button type="submit" class="btn btn-primary">Tạo hóa đơn</button>
-</form>
+{% extends "master-page.html"%}
+{% block content %}
+
+<style>
+    .invoice-container {
+        max-width: 800px;
+        margin: auto;
+        padding: 20px;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    h2 {
+        text-align: center;
+        color: #333;
+    }
+    .order-info {
+        margin-bottom: 20px;
+        padding: 15px;
+        background: #f9f9f9;
+        border-radius: 8px;
+    }
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+    .table th, .table td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: center;
+    }
+    .table th {
+        background: #007bff;
+        color: white;
+    }
+    .total-price {
+        text-align: right;
+        font-size: 18px;
+        font-weight: bold;
+        margin-top: 10px;
+    }
+    .form-container {
+        padding: 15px;
+        background: #f9f9f9;
+        border-radius: 8px;
+    }
+    .btn-submit {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        font-size: 18px;
+        background: #28a745;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .btn-submit:hover {
+        background: #218838;
+    }
+</style>
+
+<div class="invoice-container">
+    <h2>🔖 Tạo Hóa Đơn</h2>
+
+    <!-- Thông tin đơn hàng -->
+    <div class="order-info">
+        <p><strong>Mã đơn hàng:</strong> {{ order.id }}</p>
+        <p><strong>Ngày đặt hàng:</strong> {{ order.date_ordered }}</p>
+        <p><strong>Tổng số lượng:</strong> {{ order.get_cart_items }} sản phẩm</p>
+    </div>
+
+    <!-- Bảng danh sách sản phẩm -->
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Sản phẩm</th>
+                <th>Số lượng</th>
+                <th>Đơn giá</th>
+                <th>Thành tiền</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td>{{ item.product.name }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.product.price }} VNĐ</td>
+                <td>{{ item.get_total }} VNĐ</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Tổng tiền & khuyến mãi -->
+    <p class="total-price">Tổng tiền: {{ order.get_cart_total }} VNĐ</p>
+
+    {% if promotion %}
+        <p class="total-price">🎉 Giảm giá: {{ promotion.discount_percentage }}%</p>
+        <p class="total-price">Sau giảm giá: {{ order.get_cart_total_after_discount }} VNĐ</p>
+    {% endif %}
+
+    <!-- Form nhập thông tin khách hàng -->
+    <div class="form-container">
+        <form action="{% url 'create_invoice' order.id %}" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn-submit">✅ Xác nhận & Tạo hóa đơn</button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

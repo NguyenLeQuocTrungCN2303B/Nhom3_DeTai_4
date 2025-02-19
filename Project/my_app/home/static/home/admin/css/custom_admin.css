@@ -1,0 +1,12 @@
+body {
+    background-color: #f4f4f4 !important; /* Màu nền xám nhạt */
+}
+
+.module h2 {
+    background-color: #007bff !important;
+    color: white !important;
+}
+
+#header {
+    background-color: #343a40 !important;
+}

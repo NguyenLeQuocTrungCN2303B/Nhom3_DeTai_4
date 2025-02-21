@@ -1,4 +1,4 @@
-version: '3.9'
+
 services:
   web: 
     build:
@@ -20,7 +20,9 @@ services:
       MYSQL_PASSWORD: 12345678
       MYSQL_ROOT_PASSWORD: 12345678
     volumes:
-      - db_data:/var/lib/mysql
+      - .:/app 
+      - ./staticfiles:/app/staticfiles
+      
     ports:
       - "3307:3306"  # Sử dụng cổng 3307 trên máy chủ và ánh xạ đến cổng 3306 trong container
     healthcheck:

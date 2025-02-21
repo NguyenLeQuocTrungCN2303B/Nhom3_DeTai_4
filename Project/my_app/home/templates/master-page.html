@@ -15,7 +15,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 
-    <title>Demo : Dashboard - Analytics | sneat - Bootstrap Dashboard PRO</title>
+    <title>Luxury Store</title>
 
     <meta name="description" content="" />
 
@@ -35,126 +35,134 @@
     <link rel="stylesheet" href="{%static 'home/assets/vendor/css/core.css'%}" class="template-customizer-core-css" />
     <link rel="stylesheet" href="{%static 'home/assets/vendor/css/theme-default.css'%}" class="template-customizer-theme-css" />
     <link rel="stylesheet" href="{%static 'home/assets/css/demo.css' %}" />
-
+    <!-- Favicon-->
+    <link rel="apple-touch-icon" sizes="57x57" href="../static/home/assets/img/favicon/ico/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="../static/home/assets/img/favicon/ico/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="../static/home/assets/img/favicon/ico/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="../static/home/assets/img/favicon/ico/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="../static/home/assets/img/favicon/ico/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="../static/home/assets/img/favicon/ico/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="../static/home/assets/img/favicon/ico/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="../static/home/assets/img/favicon/ico/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../static/home/assets/img/favicon/ico/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="../static/home/assets/img/favicon/ico/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../static/home/assets/img/favicon/ico/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="../static/home/assets/img/favicon/ico/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../static/home/assets/img/favicon/ico/favicon-16x16.png">
+    <link rel="manifest" href="..//manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
     <!-- Vendors CSS -->
     <link rel="stylesheet" href="{%static 'home/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css' %}" />
     <link rel="stylesheet" href="{%static 'home/assets/vendor/libs/apex-charts/apex-charts.css' %}" />
+    <link rel="stylesheet" href="{%static 'home/static/home/assets/css/style.css' %}" />
     <style>
-      .card-img-top:hover {
-        transform: scale(1.1);
+      .card-img-top {
+          transition: transform 0.8s ease-in-out, opacity 0.5s, box-shadow 0.5s;
+          border-radius: 10px; /* Bo góc ảnh */
       }
-      .price-title:hover {
-        transform: scale(1.05);
       
-      }
-      .text-bold {
-        font-weight: 800;
-    }
-
-      text-color {
-          color: #696cff;
-      }
-
-      /* Main image - left */
-      .main-img img {
-          width: 100%;
-      }
-
-      /* Preview images */
-      .previews img {
-          width: 100%;
-          height: 140px;
-      }
-
-      .main-description .category {
-          text-transform: uppercase;
-          color: #696cff;
-      }
-
-      .main-description .product-title {
-          font-size: 2.5rem;
-      }
-
-      .old-price-discount {
-          font-weight: 600;
-      }
-
-      .new-price {
-          font-size: 2rem;
-          color:rgb(196 140 70)
+      .card-img-top:hover {
+          transform: scale(1.09); /* Phóng to ảnh */
           
       }
-
-      .details-title {
-          text-transform: uppercase;
-          font-weight: 600;
-          font-size: 1.2rem;
-          color: #757575;
+    
+      .container-xxl.flex-grow-1.container-p-y{
+          padding-bottom: 0px !important;  /* Giá trị mới */
       }
-
-      .buttons .block {
-          margin-right: 5px;
+      .content3 .footer{
+        position: relative;
       }
-
-      .quantity input {
-          border-radius: 10px;
-          height: 40px;
-
+      .content3 .footer b{
+        font-size: 30px;
       }
-
-
-      .custom-btn {
-          text-transform: capitalize;
-          background-color: #696cff;
-          color: white;
-          width: 150px;
-          height: 40px;
-          border-radius: 10px;
+      .content3 .footer p{
+        font-size: 15px;
+        line-height: 25px;
       }
-
-      .custom-btn:hover {
-          background-color: #696cff !important;
-          font-size: 18px;
-          color: white !important;
+      .content3 .footer .ns{
+        position: absolute;
+        bottom: -100px;
+        right:30px;
+        opacity: 0.5;
       }
-
-      .similar-product img {
-          height: 400px;
+      .footer .template{
+        height: 300px;
+        background: linear-gradient(to bottom, #FFFFFF, rgba(105, 108, 255, 0.16));
+        margin-top: 100px;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        padding: 80px;
       }
-
-      .similar-product {
-          text-align: left;
+      .footer .colum{
+        width: 300px;
       }
-
-      .similar-product .title {
-          margin: 17px 0px 4px 0px;
+      .footer .template b,
+      .footer .template p,
+      .footer .template i{
+        color: #333333;
       }
-
-      .similar-product .price {
-          font-weight: bold;
+      .footer .template .university i{
+        font-size: 2em;
       }
-
-      .questions .icon i {
-          font-size: 2rem;
+      .footer .template .small{
+        font-size: 15px;
       }
-
-      .questions-icon {
-          font-size: 2rem;
-          color: #696cff;
+      .footer .template .colum.a .small p{
+        line-height: 50px;
       }
+      .university{
+        display: flex;
+        gap: 20px;
+      }
+      .footer .template .colum.a .small i{
+        padding: 10px;
+        border: solid 1px aliceblue;
+        border-radius: 50%;
+        margin-top: 40px;
+        margin-right: 10px;
+        
+      }
+      .footer .template .colum.b .small p,
+      .footer .template .colum.c .small p{
+        line-height: 35px;
+      }
+      .footer .template .colum.d .small input {
+        border-radius: 10px;
+        background-color: #ffffff;
+        height: 100%;
+        margin: 10px 0 10px 0;
+        border:solid 2px aliceblue;
+        padding: 10px 20px;
+        color: aliceblue;
+      }
+      .footer .template .colum.d .small button{
+        display: block;
+        background-color: #ffffff;
+        color: aliceblue;
+        border-radius: 20px;
+        border: solid 2px aliceblue ;
+        padding: 10px 20px;
+        margin-top: 30px;
+        transition: 0.8;
+        cursor: pointer;
+      }
+      .footer .template .colum.d .small button:hover{
+        color: black;
+        transform: scale(1.1);
+        background-color: aliceblue;
+      }
+      .footer .template .colum{margin-left: 10px;
+        margin-right:30px;
+      }
+      .footer .template .colum.c{
+        margin-left: 20px;
+      }
+      
+    </style>
 
-
-      /* Small devices (landscape phones, less than 768px) */
-      @media (max-width: 767.98px) {
-
-          /* Make preview images responsive  */
-          .previews img {
-              width: 100%;
-              height: auto;
-          }
-
-    }
-      </style>
     <!-- Page CSS -->
 
     <!-- Helpers -->
@@ -186,7 +194,7 @@
   <body>
     <!-- Layout wrapper -->
     <div class="layout-wrapper layout-content-navbar">
-      <div class="layout-container">
+      <div class="layout-container" >
         <!-- Menu -->
         {%block left-menu%}
         {% endblock %}
@@ -200,7 +208,7 @@
           <!-- / Navbar -->
 
           <!-- Content wrapper -->
-          <div class="content-wrapper">
+          <div class="content-wrapper" >
             <!-- Content -->
             {%block content%}
             {%endblock%}

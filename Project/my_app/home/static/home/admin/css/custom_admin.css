@@ -1,0 +1,62 @@
+/* custom_admin.css - Tùy chỉnh giao diện Django Admin */
+
+/* Thay đổi màu nền */
+body {
+    background: #f4f6f9;
+}
+
+/* Header */
+#header {
+    background: linear-gradient(90deg, #007bff, #0056b3);
+    color: white;
+    padding: 10px;
+}
+
+/* Logo Django Admin */
+#header .branding h1 {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+/* Navbar */
+div.breadcrumbs {
+    background: #e0e0e0;
+    padding: 10px;
+}
+
+/* Bảng danh sách admin */
+.module table {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Nút trong admin */
+button, input[type="submit"], a.button {
+    background: #007bff !important;
+    border-radius: 5px;
+    color: white !important;
+    padding: 8px 15px;
+    text-decoration: none;
+}
+
+/* Khi hover vào nút */
+button:hover, input[type="submit"]:hover, a.button:hover {
+    background: #0056b3 !important;
+}
+
+/* Form */
+fieldset {
+    border-radius: 10px;
+    padding: 15px;
+    background: white;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Footer */
+#footer {
+    background: #e0e0e0;
+    padding: 10px;
+    text-align: center;
+    font-size: 14px;
+}

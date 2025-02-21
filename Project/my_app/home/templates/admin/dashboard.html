@@ -1,0 +1,163 @@
+{% extends "admin/base.html" %}
+
+{% block extrahead %}
+<style>
+    body {
+        background-color: #f8f9fa;
+        font-family: 'Arial', sans-serif;
+    }
+    .container {
+        max-width: 1200px;
+        margin: auto;
+    }
+    .card {
+        border-radius: 12px;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+    .card-title {
+        font-weight: bold;
+        font-size: 1.2rem;
+    }
+    .display-4 {
+        font-weight: bold;
+    }
+    .table th {
+        background-color: #343a40;
+        color: white;
+        text-align: center;
+    }
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: #f2f2f2;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-center">📊 Jewelry Sales Dashboard</h1>
+
+    <!-- Tổng doanh thu -->
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="card text-white bg-primary shadow">
+                <div class="card-body text-center">
+                    <h5 class="card-title">💰 Tổng doanh thu</h5>
+                    <p class="card-text display-4">{{ total_revenue }} ₫</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-success shadow">
+                <div class="card-body text-center">
+                    <h5 class="card-title">🛒 Tổng đơn hàng</h5>
+                    <p class="card-text display-4">{{ total_orders }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-warning shadow">
+                <div class="card-body text-center">
+                    <h5 class="card-title">👩‍💼 Tổng nhân viên</h5>
+                    <p class="card-text display-4">{{ total_employees }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Biểu đồ doanh thu theo tháng -->
+    <div class="card mt-4">
+        <div class="card-header bg-dark text-white text-center">📈 Doanh thu theo tháng</div>
+        <div class="card-body">
+            <canvas id="revenueChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Doanh thu theo quầy -->
+    <div class="card mt-4">
+        <div class="card-header bg-dark text-white text-center">💎 Doanh thu theo quầy</div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Quầy</th>
+                        <th>Doanh thu</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for counter, revenue in revenue_by_counter.items %}
+                    <tr>
+                        <td class="text-center">{{ counter.name }}</td>
+                        <td class="text-center">{{ revenue }} ₫</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="2" class="text-center">Không có dữ liệu.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Doanh thu theo nhân viên -->
+    <div class="card mt-4">
+        <div class="card-header bg-dark text-white text-center">👨‍💼 Doanh thu theo nhân viên</div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Nhân viên</th>
+                        <th>Quầy</th>
+                        <th>Doanh thu</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for employee, revenue in revenue_by_employee.items %}
+                    <tr>
+                        <td class="text-center">{{ employee.user.get_full_name }}</td>
+                        <td class="text-center">{{ employee.counter.name }}</td>
+                        <td class="text-center">{{ revenue }} ₫</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3" class="text-center">Không có dữ liệu.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Thêm Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    var ctx = document.getElementById('revenueChart').getContext('2d');
+    var revenueChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: [{% for data in revenue_by_month %}"{{ data.month|date:'M/Y' }}",{% endfor %}],
+            datasets: [{
+                label: 'Doanh thu theo tháng',
+                data: [{% for data in revenue_by_month %}{{ data.total }},{% endfor %}],
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

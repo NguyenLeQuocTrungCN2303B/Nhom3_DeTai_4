@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'A_Product_Mng',
-    'django.contrib.humanize',
     'home',
 ]
 
@@ -86,7 +85,7 @@ DATABASES = {
         'NAME': 'djangodb',
         'USER': 'root',
         'PASSWORD': '12345678',
-        'HOST':'db',
+        'HOST':'localhost',
         'PORT':'3306',
     }
 }

@@ -1,0 +1,80 @@
+{% extends "admin/base.html" %}
+
+{% block extrahead %}
+<!-- Thêm CSS -->
+<style>
+    body {
+        background-color: #f8f9fa;
+        font-family: 'Arial', sans-serif;
+    }
+    .container {
+        max-width: 1200px;
+        margin: auto;
+    }
+    .card {
+        border-radius: 12px;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+    .table th {
+        background-color: #343a40;
+        color: white;
+        text-align: center;
+    }
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: #f2f2f2;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-center">📋 Danh sách nhân viên</h1>
+
+    <div class="card mt-4">
+        <div class="card-header bg-dark text-white text-center">
+            👨‍💼 Thông tin nhân viên
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>👤 Tên nhân viên</th>
+                        <th>🏢 Quầy làm việc</th>
+                        <th>✅ Quyền thanh toán</th>
+                        <th>📧 Email</th>
+                        <th>📞 SĐT</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for employee in employees %}
+                    <tr>
+                        <td class="text-center">{{ forloop.counter }}</td>
+                        <td>{{ employee.user.get_full_name }}</td>
+                        <td class="text-center">{{ employee.counter.name }}</td>
+                        <td class="text-center">
+                            {% if employee.can_checkout %}
+                                <span class="badge bg-success">Có</span>
+                            {% else %}
+                                <span class="badge bg-danger">Không</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ employee.user.email|default:"N/A" }}</td>
+                        <td>{{ employee.user.profile.phone_number|default:"N/A" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center">Không có nhân viên nào.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,158 @@
+<aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+    <div class="app-brand demo">
+      <a href="{% url 'indext' %}"  class="app-brand-link">
+        <span class="app-brand-logo demo">
+          <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 22 20" ><path d="M6.42 9.87 12 20.78l5.58-10.91H6.42zM5.9 4.01 2 9.24h3.62l.28-5.23zm6.1-.59L6.63 9.24h10.74L12 3.42zM2.04 9.87l9.09 10.58L5.72 9.87H2.04zM11.53 3h-.15l-4.84.51a.09.09 0 0 1 0 .05l-.27 5.15zm1.34 17.45 9.09-10.58h-3.68l-5.41 10.58zm4.58-16.87a.09.09 0 0 1 0-.05l-4-.42-1-.11 5.26 5.71zm.65.43.28 5.23H22l-2.22-2.98-1.68-2.25z"/></svg>
+        </span>
+        <span class="app-brand-text demo menu-text fw-bold ms-2">Luxury Store</span>
+      </a>
+      <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
+        <i class="bx bx-chevron-left bx-sm d-flex align-items-center justify-content-center"></i>
+      </a>
+    </div>
+
+    <div class="menu-inner-shadow"></div>
+
+    <ul class="menu-inner py-1">
+
+
+      <!--list product-->
+      <li class="menu-item active" style="">
+        <a href="javascript:void(0);" class="menu-link menu-toggle">
+          <i class="menu-icon tf-icons bx bx-home-smile"></i>
+          <div class="text-truncate" data-i18n="Dashboards">Sản phẩm</div>
+          <span class="badge rounded-pill bg-danger ms-auto">10</span>
+        </a>
+        <ul class="menu-sub">
+          {% for i in categories %}
+          <li class="menu-item active">
+            <a href="{% url 'category' %}?category={{ i.slug }}" class="menu-link">
+              <div class="text-truncate" data-i18n="Analytics">{{ i.name }}</div>
+            </a>
+          </li>
+          {% endfor %}
+        </ul>        
+      </li>
+      <!-- register -->
+      <li class="menu-item" style="">
+        <a href="javascript:void(0);" class="menu-link menu-toggle">
+          <i class="bx bx-sm bx-user me-1_5"></i>
+          <div class="text-truncate" data-i18n="Authentications">Tài Khoản</div>
+        </a>
+        <ul class="menu-sub">
+          <li class="menu-item">
+            <a href="{%url 'login'%}" class="menu-link" target="_blank">
+              <div class="text-truncate" data-i18n="Basic">Đăng Nhập</div>
+            </a>
+          </li>
+          <li class="menu-item">
+            <a href="{%url 'logout'%}" class="menu-link" target="_blank">
+              <div class="text-truncate" data-i18n="Basic">Đăng Xuất</div>
+            </a>
+          </li>
+          <li class="menu-item">
+            <a href="http://127.0.0.1:8000/" class="menu-link" target="_blank">
+              <div class="text-truncate" data-i18n="Basic">Đăng Ký</div>
+            </a>
+          </li>
+          <li class="menu-item">
+            <a href="http://127.0.0.1:8000/" class="menu-link" target="_blank">
+              <div class="text-truncate" data-i18n="Basic">Quên mật khẩu</div>
+            </a>
+          </li>
+        </ul>
+      </li>
+      <!-- QLSP -->
+      <li class="menu-item" style="">
+        <a href="javascript:void(0);" class="menu-link menu-toggle">
+          <i class="menu-icon tf-icons bx bx-layout"></i>
+          <div class="text-truncate" data-i18n="Authentications">Quản Lý Sản Phẩm</div>
+        </a>
+        <ul class="menu-sub">
+          <li class="menu-item">
+            <a href="http://127.0.0.1:8000/admin/A_Product_Mng/product/add/" class="menu-link" target="_blank">
+              <div class="text-truncate" data-i18n="Basic">Thêm sản phẩm</div>
+            </a>
+          </li>
+          <li class="menu-item">
+            <a href="http://127.0.0.1:8000/admin/A_Product_Mng/product/add/" class="menu-link" target="_blank">
+              <div class="text-truncate" data-i18n="Basic">Chỉnh sửa</div>
+            </a>
+          </li>
+        </ul>
+      </li>
+      <!-- QLNV -->
+      <li class="menu-item" style="">
+        <a href="javascript:void(0);" class="menu-link menu-toggle">
+          <i class="menu-icon tf-icons bx bx-detail"></i>
+          <div class="text-truncate" data-i18n="Authentications">Quản Lý nhân viên</div>
+        </a>
+        <ul class="menu-sub">
+          <li class="menu-item">
+            <a href="http://127.0.0.1:8000/admin/A_Product_Mng/employee/add/" class="menu-link" target="_blank">
+              <div class="text-truncate" data-i18n="Basic">Thêm nhân viên</div>
+            </a>
+          </li>
+          <li class="menu-item">
+            <a href="http://127.0.0.1:8000/admin/auth/user/1/change/" class="menu-link" target="_blank">
+              <div class="text-truncate" data-i18n="Basic">Sửa nhân viên</div>
+            </a>
+          </li>
+          <li class="menu-item">
+            <a href="{% url 'employee_list' %}" class="menu-link" target="_blank">
+              <div class="text-truncate" data-i18n="Basic">Danh sách nhân viên</div>
+            </a>
+          </li> 
+        </ul>
+      </li>
+      <!-- km -->
+      <li class="menu-item" style="">
+        <a href="javascript:void(0);" class="menu-link menu-toggle">
+          <i class="menu-icon tf-icons bx bx-layout"></i>
+          <div class="text-truncate" data-i18n="Authentications">dashboard</div>
+          <div class="badge rounded-pill bg-label-primary text-uppercase fs-tiny ms-auto">Admin</div>
+        </a>
+        <ul class="menu-sub">
+          <li class="menu-item">
+            <a href="{% url 'dashboard' %}" class="menu-link" target="_blank">
+              <div class="text-truncate" data-i18n="Basic">Dashboards Tổng</div>
+            </a>
+          </li>
+          <li class="menu-item">
+            <a href="{% url 'employee_list' %}" class="menu-link" target="_blank">
+              <div class="text-truncate" data-i18n="Basic">Danh Sách nhân Viên</div>
+            </a>
+          </li>
+          <li class="menu-item">
+            <a href="{% url 'customer_list' %}" class="menu-link" target="_blank">
+              <div class="text-truncate" data-i18n="Basic">Danh sách khách hàng</div>
+            </a>
+          </li>
+          <li class="menu-item">
+            <a href="{% url 'invoice_list' %}" class="menu-link" target="_blank">
+              <div class="text-truncate" data-i18n="Basic">Danh sách khách hàng</div>
+            </a>
+          </li>  
+        </ul>
+      </li>
+      <li class="menu-item" style="">
+        <a href="javascript:void(0);" class="menu-link menu-toggle">
+          <i class="menu-icon tf-icons bx bx-layout"></i>
+          <div class="text-truncate" data-i18n="Authentications">Tạo khuyến mãi</div>
+          <div class="badge rounded-pill bg-label-primary text-uppercase fs-tiny ms-auto">Admin</div>
+        </a>
+        <ul class="menu-sub">
+          <li class="menu-item">
+            <a href="http://127.0.0.1:8000/admin/A_Product_Mng/promotion/add/" class="menu-link" target="_blank">
+              <div class="text-truncate" data-i18n="Basic">Tạo đợt khuyến mãi</div>
+            </a>
+          </li>
+          <li class="menu-item">
+            <a href="{% url 'indext' %}" class="menu-link" target="_blank">
+              <div class="text-truncate" data-i18n="Basic">Khuyến mãi dành riêng</div>
+            </a>
+          </li> 
+        </ul>
+      </li>
+    </ul>
+  </aside>

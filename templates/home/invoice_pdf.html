@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Hóa Đơn #{{ invoice.id }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .invoice-container { width: 100%; max-width: 800px; margin: auto; border: 1px solid #ddd; padding: 20px; }
+        h1 { text-align: center; color: #333; }
+        .invoice-details p { margin: 5px 0; }
+        .table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .table th, .table td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+        .table th { background: #007bff; color: white; }
+        .total-price { text-align: right; font-weight: bold; font-size: 18px; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="invoice-container">
+        <h1>🧾 Hóa Đơn #{{ invoice.id }}</h1>
+
+        <div class="invoice-details">
+            <p><strong>Mã hóa đơn:</strong> {{ invoice.id }}</p>
+            <p><strong>Mã đơn hàng:</strong> {{ invoice.order.id }}</p>
+            <p><strong>Khách hàng:</strong> {{ invoice.customer.full_name }}</p>
+            <p><strong>Email:</strong> {{ invoice.customer.email }}</p>
+            <p><strong>Số điện thoại:</strong> {{ invoice.customer.phone_number }}</p>
+            <p><strong>Trạng thái:</strong> {{ invoice.status }}</p>
+            <p><strong>Ngày thanh toán:</strong> {{ invoice.payment_date }}</p>
+        </div>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Sản phẩm</th>
+                    <th>Số lượng</th>
+                    <th>Đơn giá</th>
+                    <th>Thành tiền</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in invoice.order.orderitem_set.all %}
+                <tr>
+                    <td>{{ item.product.name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ item.product.price }} VNĐ</td>
+                    <td>{{ item.get_total }} VNĐ</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <p class="total-price">💰 Tổng tiền: {{ invoice.order.get_cart_total }} VNĐ</p>
+    </div>
+</body>
+</html>

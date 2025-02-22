@@ -1,0 +1,103 @@
+{% extends "master-page.html"%}
+{% load custom_filters %}
+{%block nav-bar%}
+    {% include '../includes/nav-bar.html'%}
+{%endblock%}
+
+{%block left-menu%}
+    {% include '../includes/left-menu.html'%}
+{%endblock%}
+
+{%block content %}
+<div class="layout-wrapper layout-content-navbar">
+    <div class="layout-container">
+        <div class="layout-page" style="padding: 0px;">
+            <div class="content-wrapper">
+                <div class="container-xxl flex-grow-1 container-p-y" style="background-color: #ffffff; background-clip: content-box;display: flex;flex-direction: column;justify-content: center;align-items: center;"> 
+                    {% for product in products %}
+                    <div class="container my-5">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="main-img">
+                                    <img class="img-fluid" src="{{product.imageURL}}" alt="ProductS">
+                                  
+                                </div>
+                            </div>
+                            <div class="col-md-7">
+                                <div class="main-description px-2">
+                                    <h3 class="category text-bold">
+                                        Category: Gold
+                                    </h3>
+                                    <h5 class="product-title text-bold my-3">
+                                        {{product.name}}
+                                    </h5>
+                
+                
+                                    <div class="price-area my-4">
+                                        <p class="old-price mb-1"><del>{{ product.price|floatformat:0|intcomma_custom }}₫ </del> <span class="old-price-discount text-danger">(0% off)</span></p>
+                                        <p class="new-price text-bold mb-1" style="color:rgb(196 140 70);font-size: 18px; ">{{ product.price|floatformat:0|intcomma_custom }}₫   </p>
+                                        <p class="text-secondary mb-1">(Additional tax may apply on checkout)</p>
+                
+                                    </div>
+                
+                
+                                    <div  class="buttons d-flex my-5" style="display: flex  ;align-items: center;">
+                                        <div class="block">
+                                            <button data-product={{product.id}} data-action ="add" class="shadow btn custom-btn update-cart btn btn-primary " style="background-color:#696cff;margin-right:10px;height:50px;">Add card</button>
+                                            
+                                        </div>
+                
+                                        <div class="block quantity">
+                                            <input type="number" class="form-control" id="cart_quantity" value="1" min="0" max="5" placeholder="Enter email" name="cart_quantity">
+                                        </div>
+                                    </div>
+                
+                
+                
+                
+                                </div>
+                
+                                <div class="product-details my-4">
+                                    <h6 class="details-title text-color mb-1">Product Details</h6>
+                                    <p class="description">{{product.detail}}</p>
+                                </div>
+                              
+                                         <div class="row questions bg-light p-3">
+                                    <div class="col-md-1 icon">
+                                        <i class="fa-brands fa-rocketchat questions-icon"></i>
+                                    </div>
+                                    <div class="col-md-11 text">
+                                        Have a question about our products at E-Store? Feel free to contact our representatives via live chat or email.
+                                    </div>
+                                </div>
+                
+                                <div class="delivery my-4">
+                                    <p class="font-weight-bold mb-0"><span><i class="fa-solid fa-truck"></i></span> <b>Delivery done in 3 days from date of purchase</b> </p>
+                                    <p class="text-secondary">Order now to get this product delivery</p>
+                                </div>
+                                <div class="delivery-options my-4">
+                                    <p class="font-weight-bold mb-0"><span><i class="fa-solid fa-filter"></i></span> <b>Delivery options</b> </p>
+                                    <p class="text-secondary">View delivery options here</p>
+                                </div>
+                                
+                             
+                            </div>
+                        </div>
+                    </div>
+                
+                
+                
+                
+                
+                    </div>
+                 {%endfor%}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>  
+{%endblock%}
+
+{%block footer%}
+    {% include '../includes/footer.html'%}
+{%endblock%}

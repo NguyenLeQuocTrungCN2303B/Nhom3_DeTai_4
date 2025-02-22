@@ -1,5 +1,0 @@
-{% for counter in counters %}
-    <h3>{{ counter.name }}</h3>
-    <p>{{ counter.description }}</p>
-    <a href="{% url 'counter_detail' counter.id %}">Chi tiết</a>
-{% endfor %}

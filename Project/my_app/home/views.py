@@ -3,13 +3,24 @@ from django.http import HttpResponse, JsonResponse
 from django.template import loader
 from A_Product_Mng.models import *
 import json 
-import xml.etree.ElementTree as ET
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
-import requests
 from django.db.models import Q
 from django import template
+from django.template.loader import render_to_string
+from weasyprint import HTML
+import tempfile
+from django.db.models import Sum,F
+import requests
+import logging
+import time
+from django.contrib.auth.decorators import user_passes_test
+from django.db.models.functions import TruncMonth
+from django.core.exceptions import PermissionDenied
+import xml.etree.ElementTree as ET
+from datetime import datetime
+from django.contrib.auth.forms import UserCreationForm
+
 
 register = template.Library()
 
@@ -21,28 +32,36 @@ def indext(request):
     }
     return render(request, 'home/indext.html', context)
 
-
-    try:
-        return f"{int(value):,}".replace(",", ".")  # Thay dấu `,` bằng `.`
-    except (ValueError, TypeError):
-        return value
 # Hàm lấy giá vàng từ API
-def get_gold_price():
-    gold_url = 'https://apiforlearning.zendvn.com/api/get-gold'
-    try:
-        gold_response = requests.get(gold_url, verify=False, timeout=5)
-        gold_response.raise_for_status()  # Kiểm tra lỗi HTTP
-        items_gold = gold_response.json()
 
-        if items_gold and "sell" in items_gold[0]:  
-            # Chuyển đổi giá trị "sell" thành số nguyên
-            return int(float(items_gold[0]['sell'].replace(',', '')))
-    
-    except (requests.RequestException, ValueError, IndexError, KeyError):
-        return 0  # Giá mặc định nếu API lỗi
-    
-    return 0  # Trả về giá mặc định nếu có lỗi dữ liệu
-# View xử lý danh sách sản phẩm
+logging.basicConfig(level=logging.INFO)
+
+def get_gold_price():
+    gold_url = "https://apiforlearning.zendvn.com/api/get-gold"
+
+    for attempt in range(3):  # Thử tối đa 3 lần
+        try:
+            response = requests.get(gold_url, verify=False, timeout=10)
+            response.raise_for_status()  # Kiểm tra lỗi HTTP
+            
+            data = response.json()
+
+            # Kiểm tra dữ liệu hợp lệ
+            if isinstance(data, list) and len(data) > 0 and "sell" in data[0]:
+                sell_price = int(float(data[0]['sell'].replace(',', '')) * 1000000)  # Đổi sang đơn vị VND
+                logging.info(f"✅ Giá vàng lấy được: {sell_price:,} VND")
+                return sell_price
+
+        except requests.exceptions.Timeout:
+            logging.warning(f"⏳ Thử lần {attempt+1}: API timeout, đang thử lại...")
+            time.sleep(2)  # Chờ 2 giây trước khi thử lại
+        except requests.exceptions.RequestException as e:
+            logging.error(f"❌ Lỗi API: {e}")
+            break  # Nếu gặp lỗi không phải timeout thì dừng luôn
+
+    logging.error("❌ API không phản hồi sau 3 lần thử. Trả về giá mặc định.")
+    return 0
+
 def products(request):
     products = Product.objects.all()
     gold_price = get_gold_price()
@@ -81,12 +100,18 @@ def gold_price(request):
 
 def detail(request):
     if request.user.is_authenticated:
-        # Lấy thông tin nhân viên từ user hiện tại
-        employee = request.user.employee  # Truy cập Employee từ user
-        
-        # Tạo hoặc lấy đơn hàng liên quan đến nhân viên đó và chưa hoàn thành
-        order, created = Order.objects.get_or_create(employee=employee, complete=False)
-        items = order.orderitem_set.all()  # Truy vấn các item trong đơn hàng
+        if request.user.is_staff or request.user.is_superuser:
+            # Admin không có Employee, nên không cần lấy employee
+            order = None
+            items = []
+        else:
+            try:
+                employee = request.user.employee  # Truy cập Employee từ user
+                order, created = Order.objects.get_or_create(employee=employee, complete=False)
+                items = order.orderitem_set.all()  # Truy vấn các item trong đơn hàng
+            except Employee.DoesNotExist:
+                items = []
+                order = None
     else:
         items = []
         order = None
@@ -135,17 +160,24 @@ def register(request):
 
 def loginPage(request):
     if request.user.is_authenticated:
-        return redirect('indext')  # Đảm bảo chuyển hướng đúng đến 'indext'
+        return redirect('indext')  # Nếu đã đăng nhập, chuyển hướng về trang chính
+
     if request.method == "POST":
         username = request.POST.get('username')
         password = request.POST.get('password')
+
+        # Xác thực người dùng
         user = authenticate(request, username=username, password=password)
+
         if user is not None:
-            login(request, user)
-            return redirect('indext')  # Đảm bảo chuyển hướng sau khi đăng nhập thành công
+            login(request, user)  # Đăng nhập vào Django
+            request.session.set_expiry(0)  # Hết phiên làm việc sẽ đăng xuất
+            return redirect('indext')  # Chuyển hướng sau khi đăng nhập thành công
         else:
-            messages.info(request, 'Tài khoản hoặc mật khẩu không đúng!')
-    return render(request, 'home/login.html', {})
+            messages.error(request, 'Tài khoản hoặc mật khẩu không đúng!')
+            return redirect('login')  # Tránh trường hợp đăng nhập sai vẫn ở lại trang
+
+    return render(request, 'home/login.html')
 
 def logoutPage(request):
     logout(request)
@@ -154,22 +186,17 @@ def logoutPage(request):
 def category(request):
     categories = Category.objects.all()
     active_category_slug = request.GET.get("category", None)
-    products = []  
+    products = Product.objects.none()  # Trả về QuerySet rỗng mặc định
     active_category = None  
-    
+
     if active_category_slug:
-        try:
-            # Lấy category dựa trên tên (hoặc slug nếu bạn muốn)
-            active_category = Category.objects.get(name=active_category_slug)
-            # Truy vấn các sản phẩm có liên kết với active_category
-            products = Product.objects.filter(category=active_category)  # Dùng 'category' thay vì 'Category'
-        except Category.DoesNotExist:
-            active_category = None
-    
+        active_category = get_object_or_404(Category, slug=active_category_slug)
+        products = Product.objects.filter(category=active_category).prefetch_related("category")  # Sửa lại
+
     context = {
-        'categories': categories,
-        'products': products,
-        'active_category': active_category
+        "categories": categories,
+        "products": products,
+        "active_category": active_category
     }
     return render(request, "home/category.html", context)
 
@@ -269,19 +296,15 @@ def create_invoice(request, order_id):
 
 def invoice_detail(request, invoice_id):
     invoice = get_object_or_404(Invoice, id=invoice_id)
-    return render(request, 'home/invoice_detail.html', {'invoice': invoice})
-
-
-from django.template.loader import render_to_string
-from weasyprint import HTML
-import tempfile
-from datetime import datetime
+    promotion = Promotion.objects.filter(start_date__lte=now(), end_date__gte=now()).first()
+    return render(request, 'home/invoice_detail.html', {'invoice': invoice,'promotion': promotion})
 
 def generate_invoice_pdf(request, invoice_id):
     invoice = get_object_or_404(Invoice, id=invoice_id)
-
+    promotion = Promotion.objects.filter(start_date__lte=now(), end_date__gte=now()).first()
     # Render HTML thành chuỗi
-    html_string = render_to_string('home/invoice_pdf.html', {'invoice': invoice})
+    
+    html_string = render_to_string('home/invoice_pdf.html', {'invoice': invoice,'promotion': promotion})
 
     # Tạo file PDF tạm thời
     with tempfile.NamedTemporaryFile(delete=True) as temp_file:
@@ -296,14 +319,84 @@ def generate_invoice_pdf(request, invoice_id):
     response['Content-Disposition'] = f'attachment; filename="invoice_{invoice.id}.pdf"'
     return response
 
-
-
-def category(request):
-    categories=Category.objects.filter(is_sub=False)
+def km(request):
+    products = Product.objects.all()
     context = {
-        'categories': categories,  # Truyền categories vào context
+        'products': products,
     }
-    return render(request, "includes/left-menu.html", context)
+    return render(request, 'home/km.html', context)
+
+def is_admin(user):
+    return user.is_authenticated and user.is_staff  
+
+def admin_dashboard(request):
+    if not is_admin(request.user):
+        raise PermissionDenied("Bạn không có quyền truy cập")
+
+    # Tổng số liệu
+    total_employees = Employee.objects.count()
+    total_products = Product.objects.count()
+    total_orders = Order.objects.count()
+    promotion = Promotion.objects.filter(apply_to_all=True, start_date__lte=now(), end_date__gte=now()).first()
+    discount_percentage = promotion.discount_percentage if promotion else 0
+
+# Tính tổng doanh thu trước giảm giá
+    total_revenue = OrderItem.objects.filter(order__complete=True).aggregate(total=Sum(F('get_cart_total_after_discount')))['total'] or 0
+
+# Áp dụng giảm giá
+    total_revenue_after_discount = total_revenue * (1 - discount_percentage / 100)
+    # Doanh thu theo quầy
+    revenue_by_counter = {counter: Order.objects.filter(employee__counter=counter, complete=True)
+                          .aggregate(Sum('orderitem__product__price'))['orderitem__product__price__sum'] or 0
+                          for counter in Counter.objects.all()}
+
+    # Doanh thu theo nhân viên
+    revenue_by_employee = {employee: Order.objects.filter(employee=employee, complete=True)
+                           .aggregate(Sum('orderitem__product__price'))['orderitem__product__price__sum'] or 0
+                           for employee in Employee.objects.all()}
+
+    # Thống kê doanh thu theo tháng
+    revenue_by_month = (
+        Order.objects.filter(complete=True)
+        .annotate(month=TruncMonth('date_ordered'))
+        .values('month')
+        .annotate(total=Sum('orderitem__product__price'))
+        .order_by('month')
+    )
+
+    context = {
+        "total_employees": total_employees,
+        "total_products": total_products,
+        "total_orders": total_orders,
+        "total_revenue_after_discount": total_revenue_after_discount,
+        "revenue_by_counter": revenue_by_counter,
+        "revenue_by_employee": revenue_by_employee,
+        "revenue_by_month": revenue_by_month,
+    }
+    return render(request, "admin/dashboard.html", context)
+
+def employee_list(request):
+    if not is_admin(request.user):
+        raise PermissionDenied("Bạn không có quyền truy cập")
+
+    employees = Employee.objects.select_related('user', 'counter').all()
+    return render(request, 'home/employee_list.html', {'employees': employees})
+
+def customer_list(request):
+    if not is_admin(request.user):
+        raise PermissionDenied("Bạn không có quyền truy cập")
+
+    # Lấy danh sách khách hàng đã mua (có hóa đơn)
+    customers = Customer.objects.filter(invoice__isnull=False).distinct()
+    
+    return render(request, 'home/customer_list.html', {'customers': customers})
+
+def invoice_list(request):
+    if not is_admin(request.user):
+        raise PermissionDenied("Bạn không có quyền truy cập")
+
+    invoices = Invoice.objects.all().order_by('-payment_date')
+    return render(request, 'home/invoice_list.html', {'invoices': invoices})
 
 def search_product(request):
     query = request.GET.get("q")  # Lấy từ khóa tìm kiếm từ URL

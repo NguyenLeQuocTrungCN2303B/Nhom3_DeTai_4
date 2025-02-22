@@ -1,7 +1,11 @@
 {% extends "master-page.html"%}
+{% load custom_filters %}
 {% block content %}
 
 <style>
+    .layout-page {
+        padding: 0 !important;
+    }
     .invoice-container {
         max-width: 800px;
         margin: auto;
@@ -59,11 +63,21 @@
     .btn-submit:hover {
         background: #218838;
     }
+    
+    #id_full_name, #id_email, #id_phone_number {
+      border-radius:5px;
+      width: 100%;
+      border-color:#B0C4DE;
+      border-width:1.5px;
+      height:30px;
+    }
+      
 </style>
 
 <div class="invoice-container">
-    <h2>🔖 Tạo Hóa Đơn</h2>
-
+    <div style="width: 40%; margin: 0 auto;">
+        <span class="app-brand-text demo menu-text fw-bold ms-2 badge bg-label-primary" >Luxury Store</span>
+    </div>
     <!-- Thông tin đơn hàng -->
     <div class="order-info">
         <p><strong>Mã đơn hàng:</strong> {{ order.id }}</p>
@@ -86,22 +100,23 @@
             <tr>
                 <td>{{ item.product.name }}</td>
                 <td>{{ item.quantity }}</td>
-                <td>{{ item.product.price }} VNĐ</td>
-                <td>{{ item.get_total }} VNĐ</td>
+                <td>{{ product.price|floatformat:0|intcomma_custom }} VNĐ</td>
+                <td>{{ item.get_total|floatformat:0|intcomma_custom }} VNĐ</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
 
     <!-- Tổng tiền & khuyến mãi -->
-    <p class="total-price">Tổng tiền: {{ order.get_cart_total }} VNĐ</p>
+    <p class="total-price">Tổng cộng: {{ order.get_cart_total|floatformat:0|intcomma_custom }} VNĐ</p>
 
     {% if promotion %}
         <p class="total-price">🎉 Giảm giá: {{ promotion.discount_percentage }}%</p>
-        <p class="total-price">Sau giảm giá: {{ order.get_cart_total_after_discount }} VNĐ</p>
+        <p class="total-price">Tổng Tiền{{ order.get_cart_total_after_discount|floatformat:0|intcomma_custom }} VNĐ</p>
     {% endif %}
 
     <!-- Form nhập thông tin khách hàng -->
+    <h4>📝 Nhập thông tin khách hàng</h4>
     <div class="form-container">
         <form action="{% url 'create_invoice' order.id %}" method="post">
             {% csrf_token %}

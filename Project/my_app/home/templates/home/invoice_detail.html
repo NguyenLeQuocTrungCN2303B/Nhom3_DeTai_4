@@ -1,7 +1,11 @@
 {% extends "master-page.html"%}
+{% load custom_filters %}
 {% block content %}
 
 <style>
+    .layout-page {
+        padding: 0 !important;
+    }
     .invoice-container {
         max-width: 800px;
         margin: auto;
@@ -64,6 +68,9 @@
 </style>
 
 <div class="invoice-container">
+    <div style="width: 40%; margin: 0 auto;">
+        <span class="app-brand-text demo menu-text fw-bold ms-2 badge bg-label-primary" >Luxury Store</span>
+    </div>
     <h1>📄 Chi Tiết Hóa Đơn</h1>
 
     <!-- Thông tin hóa đơn -->
@@ -92,20 +99,24 @@
             <tr>
                 <td>{{ item.product.name }}</td>
                 <td>{{ item.quantity }}</td>
-                <td>{{ item.product.price }} VNĐ</td>
-                <td>{{ item.get_total }} VNĐ</td>
+                <td>{{ item.product.price|floatformat:0|intcomma_custom  }} VNĐ</td>
+                <td>{{ item.get_total|floatformat:0|intcomma_custom  }} VNĐ</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
 
     <!-- Tổng tiền -->
-    <p class="total-price">Tổng tiền: {{ invoice.order.get_cart_total }} VNĐ</p>
+    <p class="total-price">Tổng Cộng: {{ invoice.order.get_cart_total|floatformat:0|intcomma_custom }} VNĐ</p>
 
+    {% if promotion %}
+        <p class="total-price">🎉 Giảm giá: {{ promotion.discount_percentage }}%</p>
+        <p class="total-price">Tổng Tiền: {{ invoice.order.get_cart_total_after_discount|floatformat:0|intcomma_custom }} VNĐ</p>
+    {% endif %}
     <!-- Nút tạo hóa đơn mới -->
-    < class="btn-container">
-        <a href="{% url 'create_invoice' invoice.order.id %}" class="btn">📌 Tạo hóa đơn mới</a>
-        <a href="{% url 'generate_invoice_pdf' invoice.id %}" class="btn btn-download">📥 Xuất PDF</a>
+    <div class="btn-container">
+        <a href="{% url 'indext' %}" class="btn">📌 Trang chủ</a>
+        <a href="{% url 'generate_invoice_pdf' invoice.id %}" class="btn btn-download">📥 In hóa đơn</a>
       </div>
       
       <script>

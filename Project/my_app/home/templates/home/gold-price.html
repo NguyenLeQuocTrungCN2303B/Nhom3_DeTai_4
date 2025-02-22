@@ -22,16 +22,16 @@
                                 <thead class="table-light">
                                 <tr>
                                     <th>Loại vàng</th>
-                                    <th>Bán ra</th>
-                                    <th>Mua vào</th>
+                                    <th>Bán ra(VND)</th>
+                                    <th>Mua vào(VND)</th>
                                 </tr>
                                 </thead>
                                 <tbody class="table-border-bottom-0" >
                                     {% for gold in items_gold %}
                                         <tr>
-                                            <td>{{gold.type}}</td>
-                                            <td>{{gold.buy}}</td>
-                                            <td>{{gold.sell}}</td>
+                                            <td>{{gold.type}}.000</td>
+                                            <td>{{gold.buy}}.000</td>
+                                            <td>{{gold.sell}}.000</td>
                                         </tr>
                                     {%endfor%}
                                 </tbody>
@@ -44,8 +44,4 @@
         </div>
     </div>
 </div>
-{%endblock%}
-
-{%block footer%}
-    {% include '../includes/footer.html'%}
 {%endblock%}

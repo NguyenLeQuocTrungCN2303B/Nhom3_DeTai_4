@@ -72,8 +72,6 @@ class Product (models.Model):
         if not self.barcode:
             self.barcode = self.generate_barcode()
         super().save(*args, **kwargs)
-
-
 class Order (models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, blank=True, related_name="orders")
     date_ordered = models.DateTimeField(auto_now_add=True)
@@ -133,7 +131,6 @@ class CustomerForm(forms.ModelForm):
     class Meta:
         model = Customer
         fields = ['full_name', 'email', 'phone_number']  # Các trường thông tin khách hàng
-
 
 class Invoice(models.Model):
     """Mô hình hóa đơn với chi tiết sản phẩm"""

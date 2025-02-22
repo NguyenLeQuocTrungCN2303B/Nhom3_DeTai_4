@@ -1,7 +1,0 @@
-<!-- order_list.html -->
-<h1>Danh sách đơn hàng</h1>
-<ul>
-    {% for order in orders %}
-        <li>{{ order.id }} - {{ order.User.username }} - {{ order.date_ordered }}</li>
-    {% endfor %}
-</ul>

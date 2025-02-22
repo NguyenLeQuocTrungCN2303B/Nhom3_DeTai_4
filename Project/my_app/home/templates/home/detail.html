@@ -25,25 +25,26 @@
                             </div>
                             <div class="col-md-7">
                                 <div class="main-description px-2">
-                                    <div class="category text-bold">
-                                        Category: Women
-                                    </div>
-                                    <div class="product-title text-bold my-3">
+                                    <h3 class="category text-bold">
+                                        Category: Gold
+                                    </h3>
+                                    <h5 class="product-title text-bold my-3">
                                         {{product.name}}
-                                    </div>
+                                    </h5>
                 
                 
                                     <div class="price-area my-4">
-                                        <p class="old-price mb-1"><del>$100</del> <span class="old-price-discount text-danger">(20% off)</span></p>
-                                        <p class="new-price text-bold mb-1">{{ product.price|floatformat:0|intcomma_custom }}₫   </p>
+                                        <p class="old-price mb-1"><del>{{ product.price|floatformat:0|intcomma_custom }}₫ </del> <span class="old-price-discount text-danger">(0% off)</span></p>
+                                        <p class="new-price text-bold mb-1" style="color:rgb(196 140 70);font-size: 18px; ">{{ product.price|floatformat:0|intcomma_custom }}₫   </p>
                                         <p class="text-secondary mb-1">(Additional tax may apply on checkout)</p>
                 
                                     </div>
                 
                 
-                                    <div  class="buttons d-flex my-5">
+                                    <div  class="buttons d-flex my-5" style="display: flex  ;align-items: center;">
                                         <div class="block">
-                                            <button data-product={{product.id}} data-action ="add" class="shadow btn custom-btn update-cart">Add to cart</button>
+                                            <button data-product={{product.id}} data-action ="add" class="shadow btn custom-btn update-cart btn btn-primary " style="background-color:#696cff;margin-right:10px;height:50px;">Add card</button>
+                                            
                                         </div>
                 
                                         <div class="block quantity">
@@ -57,7 +58,7 @@
                                 </div>
                 
                                 <div class="product-details my-4">
-                                    <p class="details-title text-color mb-1">Product Details</p>
+                                    <h6 class="details-title text-color mb-1">Product Details</h6>
                                     <p class="description">{{product.detail}}</p>
                                 </div>
                               

@@ -1,0 +1,23 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<h2>Danh sách khách hàng đã mua</h2>
+<table border="1">
+    <tr>
+        <th>Tên khách hàng</th>
+        <th>Email</th>
+        <th>Số điện thoại</th>
+    </tr>
+    {% for customer in customers %}
+    <tr>
+        <td>{{ customer.full_name }}</td>
+        <td>{{ customer.email }}</td>
+        <td>{{ customer.phone_number|default:"Chưa có" }}</td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="3">Chưa có khách hàng nào mua hàng.</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

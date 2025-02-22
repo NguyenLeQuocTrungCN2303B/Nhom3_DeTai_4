@@ -1,5 +1,5 @@
 {% extends "master-page.html"%}
-
+{% load custom_filters %}
 {%block nav-bar%}
     {% include '../includes/nav-bar.html'%}
 {%endblock%}
@@ -23,7 +23,7 @@
                         <img class="card-img-top " src="{{product.imageURL}}" alt="Card image cap" style="width: 100%;height: 75%;object-fit: cover;transition: transform 0.3s ease;">                   
                         <div class="card-body" style="padding-top: 0px;padding-bottom: 0px;">
                           <h6 class="card-title"style="text-align: center;width: 100%;height: 30%;" >{{product.name}}</h6>
-                          <h5 class="price-title"style="text-align: center;width: 100%;margin-top:10px;color:rgb(196 140 70);transition: transform 0.3s ease;">{{product.price}}.000đ<h5>
+                          <h5 class="price-title"style="text-align: center;width: 100%;margin-top:10px;color:rgb(196 140 70);transition: transform 0.3s ease;">{{product.price|floatformat:0|intcomma_custom}}<h5>
                         </div>
                       </div>
                     </div>

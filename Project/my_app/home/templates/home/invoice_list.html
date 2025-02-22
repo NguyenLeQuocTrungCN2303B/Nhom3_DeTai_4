@@ -1,0 +1,37 @@
+{% extends 'admin/base.html' %}
+{% load custom_filters %}
+{% block content %}
+<h2>Danh sách Hóa đơn</h2>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>Mã hóa đơn</th>
+            <th>Khách hàng</th>
+            <th>Nhân viên xử lý</th>
+            <th>Ngày thanh toán</th>
+            <th>Tổng tiền</th>
+            <th>Chi tiết</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for invoice in invoices %}
+        <tr>
+            <td>{{ invoice.id }}</td>
+            <td>{{ invoice.customer.full_name|default:"Khách lẻ" }}</td>
+            <td>{{ invoice.order.employee.user.get_full_name }}</td>
+            <td>{{ invoice.payment_date }}</td>
+            <td>{{ invoice.order.get_cart_total_after_discount|floatformat:0|intcomma_custom  }}</td>
+            <td>
+                <ul>
+                    {% for item in invoice.get_order_items %}
+                    <li>{{ item.product.name }} - SL: {{ item.quantity }} - Giá: {{ item.get_total|floatformat:0|intcomma_custom  }}</li>
+                    {% endfor %}
+                </ul>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

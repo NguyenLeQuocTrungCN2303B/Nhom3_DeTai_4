@@ -1,6 +1,11 @@
+
 {% extends "admin/base.html" %}
-{% load static %}
 
 {% block extrastyle %}
-    <link rel="stylesheet" type="text/css" href="{% static 'home/admin/css/custom_admin.css' %}">
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="/static/admin/css/custom_admin.css">
 {% endblock %}
+{% block branding %}
+    <h1 style="color: white;">💎 Jewelry Sales Admin</h1>
+{% endblock %}
+

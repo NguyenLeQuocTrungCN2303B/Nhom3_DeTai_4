@@ -11,7 +11,7 @@ for (i = 0; i < updateBtns.length; i++) {
             Swal.fire({
                 icon: "error",
                 text: "Bạn chưa đăng nhập!",
-                footer: '<a href="#">Đi tới trang đăng nhập?</a>',
+                footer: '<a href="http://127.0.0.1:8000/login/">Đi tới trang đăng nhập?</a>',
             });
         } else {
             updateUserOrder(productId, action); // Gọi hàm xử lý giỏ hàng

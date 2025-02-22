@@ -1,3 +1,4 @@
+{% load custom_filters %}
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -42,14 +43,19 @@
                 <tr>
                     <td>{{ item.product.name }}</td>
                     <td>{{ item.quantity }}</td>
-                    <td>{{ item.product.price }} VNĐ</td>
-                    <td>{{ item.get_total }} VNĐ</td>
+                    <td>{{ item.product.price|floatformat:0|intcomma_custom  }} VNĐ</td>
+                    <td>{{ item.get_total|floatformat:0|intcomma_custom  }} VNĐ</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
 
-        <p class="total-price">💰 Tổng tiền: {{ invoice.order.get_cart_total }} VNĐ</p>
+        <p class="total-price">Tổng Cộng: {{ invoice.order.get_cart_total|floatformat:0|intcomma_custom }} VNĐ</p>
+
+        {% if promotion %}
+            <p class="total-price">🎉 Giảm giá: {{ promotion.discount_percentage }}%</p>
+            <p class="total-price">Tổng Tiền: {{ invoice.order.get_cart_total_after_discount|floatformat:0|intcomma_custom }} VNĐ</p>
+        {% endif %}
     </div>
 </body>
 </html>
